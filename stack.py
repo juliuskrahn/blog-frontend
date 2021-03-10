@@ -31,7 +31,7 @@ class Stack(cdk.core.Stack):
             retain_on_delete=False,
             cache_control=[
                 s3deploy.CacheControl.set_public(),
-                s3deploy.CacheControl.max_age(cdk.core.Duration.days(365)),
+                s3deploy.CacheControl.max_age(cdk.core.Duration.days(2)),
             ]
         )
 
