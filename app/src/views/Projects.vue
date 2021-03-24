@@ -8,7 +8,7 @@
     class="normal-link">Analyzing the media representation of climate change -> scraping</a> |
     <a href="https://github.com/juliuskrahn/media-analysis-climate-change"
     class="normal-link">-> analyzing the data</a></li>
-    <li><a href="https://github.com/juliuskrahn-com" class="normal-link">This website</a></li>
+    <li><a href="https://github.com/juliuskrahn/blog-backend" class="normal-link">This website</a></li>
     <li><a href="https://github.com/juliuskrahn/Taskstack"
     class="normal-link">Taskstack, a Kanban Project Management web-app</a></li>
     <li><a href="https://github.com/juliuskrahn/Respawn-Mode"

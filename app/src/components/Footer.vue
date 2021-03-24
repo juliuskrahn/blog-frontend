@@ -2,7 +2,7 @@
   <footer class="footer">
     <p class="content">
        © 2021 by Julius Krahn. All rights reserved.
-      GitHub repo: <a class="normal-link" href="https://github.com/juliuskrahn-com/frontend">frontend</a> <a class="normal-link" href="https://github.com/juliuskrahn-com/backend">backend</a>
+      GitHub repo: <a class="normal-link" href="https://github.com/juliuskrahn/blog-frontend">frontend</a> <a class="normal-link" href="https://github.com/juliuskrahn/blog-backend">backend</a>
     </p>
     <router-link v-if="userIsAdmin"
     to="/admin-console"
