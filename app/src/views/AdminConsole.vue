@@ -71,12 +71,14 @@ export default defineComponent({
         content: '',
       };
     },
-    uploadArticleContentFromFile(event: {target: {files: FileList}}) {
+    uploadArticleContentFromFile(event: {target: {files: FileList; value: string}}) {
       const reader = new FileReader();
       reader.addEventListener('load', (rEvent) => {
         if (this.article) {
           this.article.content = rEvent.target?.result as string;
         }
+        // eslint-disable-next-line no-param-reassign
+        event.target.value = '';
       });
       const file = event.target?.files[0];
       reader.readAsText(file);
@@ -110,7 +112,7 @@ export default defineComponent({
         return;
       }
       fetch(`https://api.juliuskrahn.com/article/${this.originalArticleUrlTitle}`, {
-        method: 'PUT',
+        method: 'PATCH',
         body: JSON.stringify({ key: window.localStorage.getItem('key'), ...this.article }),
       })
         .then((resp) => {
