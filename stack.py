@@ -61,7 +61,7 @@ class Stack(cdk.core.Stack):
             self,
             "blog-deployment-index",
             destination_bucket=bucket,
-            sources=[s3deploy.Source.asset("app/dist", exclude=["css", "img", "js", "favicon.ico"])],
+            sources=[s3deploy.Source.asset("frontend/dist", exclude=["css", "img", "js", "favicon.ico"])],
             retain_on_delete=False,
             prune=False,  # -> keep files in destination that aren't present in source
             cache_control=[s3deploy.CacheControl.no_cache()],
@@ -76,7 +76,7 @@ class Stack(cdk.core.Stack):
             self,
             "blog-deployment-app",
             destination_bucket=bucket,
-            sources=[s3deploy.Source.asset("app/dist", exclude=["index.html"])],
+            sources=[s3deploy.Source.asset("frontend/dist", exclude=["index.html"])],
             retain_on_delete=False,
             prune=False,  # -> keep files in destination that aren't present in source
             cache_control=[
