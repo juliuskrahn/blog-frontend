@@ -48,8 +48,6 @@ class Stack(cdk.core.Stack):
             price_class=cloudfront.PriceClass.PRICE_CLASS_100
         )
 
-        # TODO how does Cloudfront tell the client to cache locally?
-
         route53.ARecord(
             self,
             "blog-frontend-a-record",
@@ -63,10 +61,13 @@ class Stack(cdk.core.Stack):
             self,
             "blog-deployment-index",
             destination_bucket=bucket,
-            sources=[s3deploy.Source.asset("app/dist/index.html")],
+            sources=[s3deploy.Source.asset("app/dist", exclude=["css", "img", "js", "favicon.ico"])],
             retain_on_delete=False,
             prune=False,  # -> keep files in destination that aren't present in source
-            cache_control=[s3deploy.CacheControl.no_cache]
+            cache_control=[s3deploy.CacheControl.no_cache()],
+            # invalidate cloudfront cache on deployment
+            distribution=cloudfront_distribution,
+            distribution_paths=["/index.html"]
         )
 
         # deploy everything else
