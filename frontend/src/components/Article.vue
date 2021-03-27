@@ -1,15 +1,15 @@
 <template>
   <div class="article">
     <header>
-      <p class="published" :class="{isPlaceholder: isPlaceholder}">{{ publishedFormatted }}</p>
-      <h1 class="title" :class="{isPlaceholder: isPlaceholder}">{{ title }}</h1>
-      <p class="details" :class="{isPlaceholder: isPlaceholder}">
+      <p class="published" :class="{placeholder: isPlaceholder}">{{ publishedFormatted }}</p>
+      <h1 class="title" :class="{placeholder: isPlaceholder}">{{ title }}</h1>
+      <p class="details" :class="{placeholder: isPlaceholder}">
         <Tag :name="tag"/>
         {{ description }}
       </p>
     </header>
     <div class="content markdown-body"
-    :class="{isPlaceholder: isPlaceholder}"
+    :class="{placeholder: isPlaceholder}"
     v-html="renderedText"></div>
   </div>
 </template>
