@@ -1,15 +1,15 @@
 <template>
   <div class="article">
     <header>
-      <p class="published" :class="{placeholder: placeholder}">{{ publishedFormatted }}</p>
-      <h1 class="title" :class="{placeholder: placeholder}">{{ title }}</h1>
-      <p class="details" :class="{placeholder: placeholder}">
+      <p class="published" :class="{isPlaceholder: isPlaceholder}">{{ publishedFormatted }}</p>
+      <h1 class="title" :class="{isPlaceholder: isPlaceholder}">{{ title }}</h1>
+      <p class="details" :class="{isPlaceholder: isPlaceholder}">
         <Tag :name="tag"/>
         {{ description }}
       </p>
     </header>
     <div class="content markdown-body"
-    :class="{placeholder: placeholder}"
+    :class="{isPlaceholder: isPlaceholder}"
     v-html="renderedText"></div>
   </div>
 </template>
@@ -26,7 +26,15 @@ export default defineComponent({
     Tag,
   },
   name: 'Article',
-  props: ['placeholder', 'published', 'title', 'tag', 'description', 'content', 'urlTitle'],
+  props: {
+    urlTitle: String,
+    title: String,
+    tag: String,
+    description: String,
+    content: String,
+    published: String, // date
+    isPlaceholder: Boolean,
+  },
   data() {
     return {
       md: MarkdownIt('default', {

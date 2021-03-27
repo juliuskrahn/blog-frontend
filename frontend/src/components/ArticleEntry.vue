@@ -19,7 +19,14 @@ export default defineComponent({
   components: {
     Tag,
   },
-  props: ['urlTitle', 'title', 'tag', 'description', 'published', 'isPlaceholder'],
+  props: {
+    urlTitle: String,
+    title: String,
+    tag: String,
+    description: String,
+    published: String, // date
+    isPlaceholder: Boolean,
+  },
   computed: {
     publishedFormatted() {
       const published = this.published as string;
