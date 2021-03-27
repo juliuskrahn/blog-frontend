@@ -31,7 +31,6 @@ import Comment from '@/components/Comment.vue';
 import CommentInput from '@/components/CommentInput.vue';
 
 export default defineComponent({
-  name: 'Comments',
   components: {
     Comment,
     CommentInput,

@@ -37,7 +37,6 @@ import { RouteLocation } from 'vue-router';
 import Input from '../components/Input.vue';
 
 export default defineComponent({
-  name: 'AdminConsole',
   components: { Article, Input },
   inject: ['userIsAdmin'],
   emits: ['message', 'logout'],

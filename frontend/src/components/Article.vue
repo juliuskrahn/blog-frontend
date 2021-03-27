@@ -23,7 +23,6 @@ export default defineComponent({
   components: {
     Tag,
   },
-  name: 'Article',
   props: {
     urlTitle: String,
     title: String,

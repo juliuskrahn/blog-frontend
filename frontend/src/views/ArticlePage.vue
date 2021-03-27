@@ -22,7 +22,6 @@ export default defineComponent({
     Comments,
   },
   inject: ['userIsAdmin'],
-  name: 'ArticlePage',
   data() {
     return {
       // dummy data for loading placeholder...

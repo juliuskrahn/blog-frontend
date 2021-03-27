@@ -10,7 +10,6 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Message',
   props: ['text'],
   emits: ['closeMessage'],
 });

@@ -23,7 +23,6 @@ import Input from './Input.vue';
 
 export default defineComponent({
   components: { Input },
-  name: 'CommentInput',
   props: ['modelValue', 'label'],
   emits: ['update:modelValue', 'submitInput'],
   data() {

@@ -16,7 +16,6 @@ import useArticleFormatter from '@/composables/articleFormatter';
 import Tag from '@/components/Tag.vue';
 
 export default defineComponent({
-  name: 'ArticleEntry',
   components: {
     Tag,
   },

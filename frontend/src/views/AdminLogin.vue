@@ -12,7 +12,6 @@ import { useRouter } from 'vue-router';
 import Input from '../components/Input.vue';
 
 export default defineComponent({
-  name: 'AdminLogin',
   components: { Input },
   emits: ['login', 'message'],
 

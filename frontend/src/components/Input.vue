@@ -9,7 +9,6 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Input',
   props: ['type', 'modelValue', 'label', 'size'],
   emits: ['update:modelValue'],
   computed: {

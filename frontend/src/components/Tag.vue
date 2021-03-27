@@ -11,7 +11,6 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Tag',
   props: ['name', 'highlight', 'isPlaceholder'],
 });
 </script>

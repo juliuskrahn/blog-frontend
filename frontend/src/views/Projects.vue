@@ -24,7 +24,6 @@ import { defineComponent } from 'vue';
 import About from '@/components/About.vue';
 
 export default defineComponent({
-  name: 'Projects',
   components: {
     About,
   },

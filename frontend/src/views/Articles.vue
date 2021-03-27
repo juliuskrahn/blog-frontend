@@ -26,7 +26,6 @@ import Tag from '@/components/Tag.vue';
 import About from '@/components/About.vue';
 
 export default defineComponent({
-  name: 'Articles',
   components: {
     ArticleEntry,
     Tag,
