@@ -18,7 +18,6 @@
         :key="comment.id"
         v-bind="comment"
         @createResp="createResp"
-        :userIsAdmin="userIsAdmin"
         @deleteComment="deleteComment(comment.id)"
         @deleteResp="deleteResp"/>
       </div>
@@ -37,7 +36,8 @@ export default defineComponent({
     Comment,
     CommentInput,
   },
-  props: ['articleUrlTitle', 'userIsAdmin'],
+  inject: ['userIsAdmin'],
+  props: ['articleUrlTitle'],
   data() {
     return {
       comments: [] as Array<{
@@ -143,7 +143,7 @@ export default defineComponent({
       if (!name) {
         return 'anonymous';
       }
-      if (name === 'admin' && !this.userIsAdmin) {
+      if (name === 'admin' && !(this as unknown as {userIsAdmin: boolean}).userIsAdmin) {
         return `${name}#not-the-real-admin`;
       }
       return name;

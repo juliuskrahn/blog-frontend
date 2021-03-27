@@ -38,7 +38,7 @@ import { RouteLocation } from 'vue-router';
 export default defineComponent({
   name: 'AdminConsole',
   components: { Article },
-  props: ['userIsAdmin'],
+  inject: ['userIsAdmin'],
   emits: ['message', 'logout'],
   data() {
     return {
@@ -166,7 +166,7 @@ export default defineComponent({
     },
   },
   created() {
-    if (!this.userIsAdmin) {
+    if (!(this as unknown as {userIsAdmin: boolean}).userIsAdmin) {
       this.$router.push({ name: '404' });
     } else if (this.editMode) {
       this.getArticle();

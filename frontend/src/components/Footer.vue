@@ -22,7 +22,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Footer',
-  props: ['userIsAdmin'],
+  inject: ['userIsAdmin'],
 });
 </script>
 

@@ -8,8 +8,7 @@
   </router-link>
   <Comments
   v-if="!loading"
-  :articleUrlTitle="article.urlTitle"
-  :userIsAdmin="userIsAdmin"/>
+  :articleUrlTitle="article.urlTitle"/>
 </template>
 
 <script lang="ts">
@@ -22,7 +21,7 @@ export default defineComponent({
     Article,
     Comments,
   },
-  props: ['userIsAdmin'],
+  inject: ['userIsAdmin'],
   name: 'ArticlePage',
   data() {
     return {

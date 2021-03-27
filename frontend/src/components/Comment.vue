@@ -43,7 +43,8 @@ import CommentInput from '@/components/CommentInput.vue';
 export default defineComponent({
   name: 'Comment',
   components: { CommentInput },
-  props: ['id', 'content', 'author', 'resps', 'userIsAdmin'],
+  inject: ['userIsAdmin'],
+  props: ['id', 'content', 'author', 'resps'],
   emits: ['createResp', 'deleteComment', 'deleteResp'],
   data() {
     return {

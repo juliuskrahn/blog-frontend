@@ -11,7 +11,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'AdminLogin',
-  props: ['userIsAdmin'],
   emits: ['loggedInAsAdmin', 'message'],
   data() {
     return {

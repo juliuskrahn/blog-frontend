@@ -32,7 +32,6 @@ export default defineComponent({
     Tag,
     About,
   },
-  props: ['userIsAdmin'],
   data() {
     return {
       loadingTags: true,

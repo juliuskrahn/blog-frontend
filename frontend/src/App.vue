@@ -8,16 +8,15 @@
   </div>
   <div id="content">
     <router-view
-    :userIsAdmin="userIsAdmin"
     @message="newMessage"
     @loggedInAsAdmin="loggedInAsAdmin"
     @logout="logout"/>
   </div>
-  <Footer :userIsAdmin="userIsAdmin"/>
+  <Footer/>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Message from '@/components/Message.vue';
@@ -32,6 +31,11 @@ export default defineComponent({
     return {
       userIsAdmin: typeof window.localStorage.getItem('key') === 'string',
       messages: [] as string[],
+    };
+  },
+  provide() {
+    return {
+      userIsAdmin: computed(() => this.userIsAdmin),
     };
   },
   methods: {
