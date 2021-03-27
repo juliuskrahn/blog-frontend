@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submit">
-    <Input type="password" v-model="key" label="Admin key"/>
+    <BaseInput type="password" v-model="key" label="Admin key"/>
     <br/>
     <button type="submit">Login</button>
   </form>
@@ -9,10 +9,10 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import Input from '../components/Input.vue';
+import BaseInput from '../components/BaseInput.vue';
 
 export default defineComponent({
-  components: { Input },
+  components: { BaseInput },
   emits: ['login', 'message'],
 
   setup(props, { emit }) {

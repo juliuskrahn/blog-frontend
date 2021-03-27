@@ -11,7 +11,7 @@
         </textarea>
         <label>{{ label }}</label>
       </div>
-      <Input v-model="author" label="Your name" v-show="value" size="small"/>
+      <BaseInput v-model="author" label="Your name" v-show="value" size="small"/>
     </div>
     <button @click="submitInput" class="submit" v-show="value">Submit</button>
   </div>
@@ -19,10 +19,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Input from './Input.vue';
+import BaseInput from './BaseInput.vue';
 
 export default defineComponent({
-  components: { Input },
+  components: { BaseInput },
   props: ['modelValue', 'label'],
   emits: ['update:modelValue', 'submitInput'],
   data() {

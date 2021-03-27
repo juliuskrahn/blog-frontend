@@ -1,5 +1,5 @@
 <template>
-  <About/>
+  <TheAbout/>
   <div class="articles">
     <div class="tag-list">
       <Tag v-for="tag in tags"
@@ -11,7 +11,7 @@
       class="all-articles-tag"/>
     </div>
     <div class="article-list">
-      <ArticleEntry v-for="article in articles"
+      <ArticleItem v-for="article in articles"
       :key="article.url"
       v-bind="article"
       :isPlaceholder="loadingArticles"/>
@@ -21,15 +21,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ArticleEntry from '@/components/ArticleEntry.vue';
+import ArticleItem from '@/components/ArticleItem.vue';
 import Tag from '@/components/Tag.vue';
-import About from '@/components/About.vue';
+import TheAbout from '@/components/TheAbout.vue';
 
 export default defineComponent({
   components: {
-    ArticleEntry,
+    ArticleItem,
     Tag,
-    About,
+    TheAbout,
   },
   data() {
     return {

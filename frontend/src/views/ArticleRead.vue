@@ -1,5 +1,5 @@
 <template>
-  <Article v-bind="article" :isPlaceholder="loading"/>
+  <TheArticle v-bind="article" :isPlaceholder="loading"/>
   <router-link
   :to="{ name: 'AdminConsole', params: { article: article.urlTitle } }"
   v-if="userIsAdmin.value"
@@ -13,12 +13,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Article from '@/components/Article.vue';
-import Comments from '@/components/Comments.vue';
+import TheArticle from '@/components/TheArticle.vue';
+import Comments from '@/components/TheCommentSection.vue';
 
 export default defineComponent({
   components: {
-    Article,
+    TheArticle,
     Comments,
   },
   inject: ['userIsAdmin'],

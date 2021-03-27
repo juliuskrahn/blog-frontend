@@ -1,5 +1,5 @@
 <template>
-  <Header/>
+  <TheHeader/>
   <div class="messages">
     <Message v-for="message in messages"
     :key="message"
@@ -12,7 +12,7 @@
     @login="login"
     @logout="logout"/>
   </div>
-  <Footer/>
+  <TheFooter/>
 </template>
 
 <script lang="ts">
@@ -21,14 +21,14 @@ import {
   ref,
   provide,
 } from 'vue';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
+import TheHeader from '@/components/TheHeader.vue';
+import TheFooter from '@/components/TheFooter.vue';
 import Message from '@/components/Message.vue';
 
 export default defineComponent({
   components: {
-    Header,
-    Footer,
+    TheHeader,
+    TheFooter,
     Message,
   },
   setup() {

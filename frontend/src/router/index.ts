@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Articles from '../views/Articles.vue';
+import ArticleBrowse from '../views/ArticleBrowse.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Articles',
-    component: Articles,
+    name: 'ArticleBrowse',
+    component: ArticleBrowse,
   },
   { path: '/articles', redirect: '/' },
   {
     path: '/tag/:tag',
-    name: 'ArticlesWithTag',
-    component: Articles,
+    name: 'ArticleBrowseTag',
+    component: ArticleBrowse,
   },
   {
     path: '/article/:article',
-    name: 'ArticlePage',
-    component: () => import('../views/ArticlePage.vue'),
+    name: 'ArticleRead',
+    component: () => import('../views/ArticleRead.vue'),
   },
   {
     path: '/projects',
@@ -44,7 +44,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/:pathMatch(.*)*',
     name: '404',
-    component: () => import('../views/404.vue'),
+    component: () => import('../views/Error404.vue'),
   },
 ];
 

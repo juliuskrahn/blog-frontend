@@ -7,14 +7,14 @@
       <button @click="logout">Logout</button>
     </template>
     <template v-else-if="article">
-      <Input v-model="article.title" label="Title"/>
+      <BaseInput v-model="article.title" label="Title"/>
       <div class="space"></div>
-      <Input v-model="article.urlTitle" v-if="createMode" label="URL Title" size="small"/>
+      <BaseInput v-model="article.urlTitle" v-if="createMode" label="URL Title" size="small"/>
       <br/>
-      <Input v-model="article.tag" label="Tag" size="small"/>
+      <BaseInput v-model="article.tag" label="Tag" size="small"/>
       <div class="space"></div>
-      <Input v-model="article.description" label="Description"/>
-      <Article v-bind="article"/>
+      <BaseInput v-model="article.description" label="Description"/>
+      <TheArticle v-bind="article"/>
       <button @click="submit">Submit</button>
       <div class="space"></div>
       <input @change="uploadArticleContentFromFile"
@@ -32,12 +32,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Article from '@/components/Article.vue';
+import TheArticle from '@/components/TheArticle.vue';
 import { RouteLocation } from 'vue-router';
-import Input from '../components/Input.vue';
+import BaseInput from '../components/BaseInput.vue';
 
 export default defineComponent({
-  components: { Article, Input },
+  components: { TheArticle, BaseInput },
   inject: ['userIsAdmin'],
   emits: ['message', 'logout'],
   data() {

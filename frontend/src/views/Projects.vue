@@ -1,5 +1,5 @@
 <template>
-  <About/>
+  <TheAbout/>
   <p>My most noteworthy recent projects:</p>
   <ul style="padding-left: 24px;">
     <li>Currently working on thlink,
@@ -21,11 +21,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import About from '@/components/About.vue';
+import TheAbout from '@/components/TheAbout.vue';
 
 export default defineComponent({
-  components: {
-    About,
-  },
+  components: { TheAbout },
 });
 </script>
