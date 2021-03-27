@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRef } from 'vue';
+import useArticleFormatter from '@/composables/articleFormatter';
 import Tag from '@/components/Tag.vue';
 
 export default defineComponent({
@@ -24,15 +25,17 @@ export default defineComponent({
     title: String,
     tag: String,
     description: String,
-    published: String, // date
+    published: { // date
+      required: true,
+      type: String,
+    },
     isPlaceholder: Boolean,
   },
-  computed: {
-    publishedFormatted() {
-      const published = this.published as string;
-      const date = new Date(published);
-      return date.toDateString();
-    },
+  setup(props) {
+    const { publishedFormatted } = useArticleFormatter(toRef(props, 'published'));
+    return {
+      publishedFormatted,
+    };
   },
 });
 </script>

@@ -10,16 +10,14 @@
     </header>
     <div class="content markdown-body"
     :class="{placeholder: isPlaceholder}"
-    v-html="renderedText"></div>
+    v-html="contentFormatted"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs } from 'vue';
+import useArticleFormatter from '@/composables/articleFormatter';
 import Tag from '@/components/Tag.vue';
-import MarkdownIt from 'markdown-it';
-import MarkdownItAnchor from 'markdown-it-anchor';
-import Hljs from 'highlight.js';
 
 export default defineComponent({
   components: {
@@ -31,38 +29,23 @@ export default defineComponent({
     title: String,
     tag: String,
     description: String,
-    content: String,
-    published: String, // date
+    content: {
+      required: true,
+      type: String,
+    },
+    published: { // date
+      required: true,
+      type: String,
+    },
     isPlaceholder: Boolean,
   },
-  data() {
+  setup(props) {
+    const { published, content } = toRefs(props);
+    const { publishedFormatted, contentFormatted } = useArticleFormatter(published, content);
     return {
-      md: MarkdownIt('default', {
-        html: true,
-        linkify: true,
-        typographer: true,
-        highlight(str, lang) {
-          if (lang && Hljs.getLanguage(lang)) {
-            try {
-              return Hljs.highlight(lang, str, true).value;
-            } catch (e) { console.error(e); }
-          }
-          return '';
-        },
-      }).use(MarkdownItAnchor, {}),
+      publishedFormatted,
+      contentFormatted,
     };
-  },
-  computed: {
-    renderedText() {
-      const md = this.md as MarkdownIt;
-      const content = this.content as string;
-      return md.render(content);
-    },
-    publishedFormatted() {
-      const published = this.published as string;
-      const date = new Date(published);
-      return date.toDateString();
-    },
   },
 });
 </script>
