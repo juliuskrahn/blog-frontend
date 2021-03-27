@@ -9,9 +9,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Input from '../components/Input.vue';
 
 export default defineComponent({
   name: 'AdminLogin',
+  components: { Input },
   emits: ['login', 'message'],
 
   setup(props, { emit }) {

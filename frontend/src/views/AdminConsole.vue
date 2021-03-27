@@ -34,10 +34,11 @@
 import { defineComponent } from 'vue';
 import Article from '@/components/Article.vue';
 import { RouteLocation } from 'vue-router';
+import Input from '../components/Input.vue';
 
 export default defineComponent({
   name: 'AdminConsole',
-  components: { Article },
+  components: { Article, Input },
   inject: ['userIsAdmin'],
   emits: ['message', 'logout'],
   data() {
