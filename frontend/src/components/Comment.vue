@@ -6,7 +6,7 @@
       <p class="commented">{{ commented(id) }}</p>
     </header>
     <p class="content">{{ content }}</p>
-    <button @click="$emit('deleteComment')" v-if="userIsAdmin">Delete</button>
+    <button @click="$emit('deleteComment')" v-if="userIsAdmin.value">Delete</button>
     <CommentInput
     class="create-reply"
     v-if="showReplyInput"

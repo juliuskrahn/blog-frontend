@@ -166,7 +166,7 @@ export default defineComponent({
     },
   },
   created() {
-    if (!(this as unknown as {userIsAdmin: boolean}).userIsAdmin) {
+    if (!(this as unknown as {userIsAdmin: {value: boolean}}).userIsAdmin.value) {
       this.$router.push({ name: '404' });
     } else if (this.editMode) {
       this.getArticle();

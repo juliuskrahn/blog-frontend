@@ -8,15 +8,19 @@
   </div>
   <div id="content">
     <router-view
-    @message="newMessage"
-    @loggedInAsAdmin="loggedInAsAdmin"
+    @message="message"
+    @login="login"
     @logout="logout"/>
   </div>
   <Footer/>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import {
+  defineComponent,
+  ref,
+  provide,
+} from 'vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Message from '@/components/Message.vue';
@@ -27,29 +31,30 @@ export default defineComponent({
     Footer,
     Message,
   },
-  data() {
-    return {
-      userIsAdmin: typeof window.localStorage.getItem('key') === 'string',
-      messages: [] as string[],
-    };
-  },
-  provide() {
-    return {
-      userIsAdmin: computed(() => this.userIsAdmin),
-    };
-  },
-  methods: {
-    newMessage(messageText: string) {
-      this.messages.push(messageText);
-    },
-    loggedInAsAdmin(key: string) {
+  setup() {
+    const messages = ref([] as string[]);
+    function message(text: string) {
+      messages.value.push(text);
+    }
+
+    const userIsAdmin = ref(typeof window.localStorage.getItem('key') === 'string');
+    provide('userIsAdmin', userIsAdmin);
+    function login(key: string) {
       window.localStorage.setItem('key', key);
-      this.userIsAdmin = true;
-    },
-    logout() {
+      userIsAdmin.value = true;
+    }
+    function logout() {
       window.localStorage.removeItem('key');
-      this.userIsAdmin = false;
-    },
+      userIsAdmin.value = false;
+    }
+
+    return {
+      messages,
+      message,
+      userIsAdmin,
+      login,
+      logout,
+    };
   },
 });
 </script>

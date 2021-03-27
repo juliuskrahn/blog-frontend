@@ -2,7 +2,7 @@
   <Article v-bind="article" :isPlaceholder="loading"/>
   <router-link
   :to="{ name: 'AdminConsole', params: { article: article.urlTitle } }"
-  v-if="userIsAdmin"
+  v-if="userIsAdmin.value"
   class="button">
     Open in Admin console
   </router-link>

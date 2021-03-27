@@ -143,7 +143,7 @@ export default defineComponent({
       if (!name) {
         return 'anonymous';
       }
-      if (name === 'admin' && !(this as unknown as {userIsAdmin: boolean}).userIsAdmin) {
+      if (name === 'admin' && !(this as unknown as {userIsAdmin: {value: boolean}}).userIsAdmin.value) {
         return `${name}#not-the-real-admin`;
       }
       return name;

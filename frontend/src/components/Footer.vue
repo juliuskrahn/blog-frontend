@@ -4,7 +4,7 @@
        © 2021 by Julius Krahn. All rights reserved.
       GitHub repo: <a class="normal-link" href="https://github.com/juliuskrahn/blog-frontend">frontend</a> <a class="normal-link" href="https://github.com/juliuskrahn/blog-backend">backend</a>
     </p>
-    <router-link v-if="userIsAdmin"
+    <router-link v-if="userIsAdmin.value"
     to="/admin-console"
     class="admin-ctrl normal-link">
       Admin console
