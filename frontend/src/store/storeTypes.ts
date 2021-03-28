@@ -21,7 +21,7 @@ export const Articles = {
   StoreAllTagsMutation: 'storeAllTags',
   StoreAllTagsAction: 'storeAllTags',
   AllSortedDescByPublishedGetter: 'allSortedDescByPublished',
-  AllWithTagSortedDescByPublishedGetter: 'allWithTagSortedDescByPublished'
+  AllWithTagSortedDescByPublishedGetter: 'allWithTagSortedDescByPublished',
 };
 
 export const Comments = {

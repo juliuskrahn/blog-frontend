@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import useStore from '@/composables/store';
-import { LoginAction } from '@/store/storeTypes';
+import { Auth } from '@/store/storeTypes';
 import BaseInput from '../components/BaseInput.vue';
 
 export default defineComponent({
@@ -18,7 +18,7 @@ export default defineComponent({
     const store = useStore();
     const key = ref('');
     function login() {
-      store.dispatch(LoginAction, { key: key.value });
+      store.dispatch(Auth.LoginAction, { key: key.value });
     }
     return {
       key,

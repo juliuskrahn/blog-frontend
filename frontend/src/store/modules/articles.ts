@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
-import { State as RootState } from '..';
+import { api } from '../../service/api';
+import RootState from '../rootState';
 import * as storeTypes from '../storeTypes';
-import { api } from '@/service/api';
 
 interface Article {
   title: string;
@@ -21,10 +21,10 @@ interface UncomittedArticleEntity extends ArticleEntity {
 
 interface State {
   articles: {
-    [key: string]: Article
+    [key: string]: Article;
   };
   tags: string[];
-  _flags: {
+  flags: {
     loadedAllArticles: boolean;
     loadedAllArticlesWithTags: string[];
     loadedAllTags: boolean;
@@ -37,11 +37,11 @@ export default {
     return {
       articles: {},
       tags: [],
-      _flags: {
+      flags: {
         loadedAllArticles: false,
         loadedAllArticlesWithTags: [],
         loadedAllTags: false,
-      }
+      },
     };
   },
   mutations: {
@@ -67,29 +67,25 @@ export default {
     },
     async [storeTypes.Articles.LoadAllAction](context) {
       // loads all articles (content excluded)
-      if (context.state._flags.loadedAllArticles) {
+      if (context.state.flags.loadedAllArticles) {
         return;
       }
-      const articles = await api.get('articlce');
+      const { articles }: { articles: Array<ArticleEntity> } = await api.get('articlce');
       if (!Array.isArray(articles)) {
         throw new TypeError();
       }
-      for (let article of articles as ArticleEntity[]) {
-        context.commit(storeTypes.Articles.PutMutation, article);
-      }
+      articles.forEach((article) => context.commit(storeTypes.Articles.PutMutation, article));
     },
     async [storeTypes.Articles.LoadAllWithTagAction](context, payload: { tag: string }) {
       // loads all articles with a specific tag (content excluded)
-      if (context.state._flags.loadedAllArticlesWithTags.includes(payload.tag)) {
+      if (context.state.flags.loadedAllArticlesWithTags.includes(payload.tag)) {
         return;
       }
-      const articles = await api.get(`tag/${payload.tag}`);
+      const { articles }: { articles: Array<ArticleEntity> } = await api.get(`tag/${payload.tag}`);
       if (!Array.isArray(articles)) {
         throw new TypeError();
       }
-      for (let article of articles as ArticleEntity[]) {
-        context.commit(storeTypes.Articles.PutMutation, article);
-      }
+      articles.forEach((article) => context.commit(storeTypes.Articles.PutMutation, article));
     },
     async [storeTypes.Articles.CreateAction](context, payload: UncomittedArticleEntity) {
       await api.post('article', { sendKey: true, content: payload });
@@ -103,30 +99,28 @@ export default {
       await api.delete(`article/${payload.urlTitle}`, { sendKey: true });
       context.commit(storeTypes.Articles.RemoveMutation, payload);
     },
-    async [storeTypes.Articles.StoreAllTagsAction](context, payload) {
+    async [storeTypes.Articles.StoreAllTagsAction](context) {
       const tags = await api.get('tags');
       context.commit(storeTypes.Articles.StoreAllTagsAction, tags);
-    }
+    },
   },
   getters: {
     [storeTypes.Articles.AllSortedDescByPublishedGetter](state: State) {
-      const articles = [];
-      for (const [urlTitle, article] of Object.entries(state.articles)) {
-        articles.push({ urlTitle, ...article });
-      }
+      const articles: Array<ArticleEntity> = [];
+      Object.entries(state.articles).forEach(
+        ([urlTitle, article]) => articles.push({ urlTitle, ...article }),
+      );
       return articles.sort((a, b) => b.published.localeCompare(a.published));
     },
     [storeTypes.Articles.AllWithTagSortedDescByPublishedGetter](state: State) {
       function wrapped(tag: string) {
-        const articles = [];
-        for (const [urlTitle, article] of Object.entries(state.articles)) {
-          if (article.tag === tag) {
-            articles.push({ urlTitle, ...article });
-          }
-        }
+        const articles: Array<ArticleEntity> = [];
+        Object.entries(state.articles).forEach(([urlTitle, article]) => {
+          if (article.tag === tag) { articles.push({ urlTitle, ...article }); }
+        });
         return articles.sort((a, b) => b.published.localeCompare(a.published));
       }
       return wrapped;
     },
-  }
+  },
 } as Module<State, RootState>;

@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
-import { State as RootState } from '..';
+import RootState from '../rootState';
 import * as storeTypes from '../storeTypes';
-import { auth, api, Failed } from '@/service/api';
+import { auth, api, Failed } from '../../service/api';
 
 interface State {
   userIsAdmin: boolean;
