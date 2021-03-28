@@ -23,9 +23,11 @@ interface State {
   articles: {
     [key: string]: Article
   };
+  tags: string[];
   _flags: {
-    loadedAll: boolean;
-    loadedAllWithTags: string[];
+    loadedAllArticles: boolean;
+    loadedAllArticlesWithTags: string[];
+    loadedAllTags: boolean;
   };
 }
 
@@ -34,9 +36,11 @@ export default {
   state() {
     return {
       articles: {},
+      tags: [],
       _flags: {
-        loadedAll: false,
-        loadedAllWithTags: [],
+        loadedAllArticles: false,
+        loadedAllArticlesWithTags: [],
+        loadedAllTags: false,
       }
     };
   },
@@ -47,6 +51,9 @@ export default {
     },
     [storeTypes.Articles.RemoveMutation](state, payload: { urlTitle: string }) {
       delete state.articles[payload.urlTitle];
+    },
+    [storeTypes.Articles.StoreAllTagsMutation](state, payload: { tags: string[] }) {
+      state.tags = payload.tags;
     },
   },
   actions: {
@@ -60,7 +67,7 @@ export default {
     },
     async [storeTypes.Articles.LoadAllAction](context) {
       // loads all articles (content excluded)
-      if (context.state._flags.loadedAll) {
+      if (context.state._flags.loadedAllArticles) {
         return;
       }
       const articles = await api.get('articlce');
@@ -73,7 +80,7 @@ export default {
     },
     async [storeTypes.Articles.LoadAllWithTagAction](context, payload: { tag: string }) {
       // loads all articles with a specific tag (content excluded)
-      if (context.state._flags.loadedAllWithTags.includes(payload.tag)) {
+      if (context.state._flags.loadedAllArticlesWithTags.includes(payload.tag)) {
         return;
       }
       const articles = await api.get(`tag/${payload.tag}`);
@@ -96,6 +103,10 @@ export default {
       await api.delete(`article/${payload.urlTitle}`, { sendKey: true });
       context.commit(storeTypes.Articles.RemoveMutation, payload);
     },
+    async [storeTypes.Articles.StoreAllTagsAction](context, payload) {
+      const tags = await api.get('tags');
+      context.commit(storeTypes.Articles.StoreAllTagsAction, tags);
+    }
   },
   getters: {
     [storeTypes.Articles.AllSortedDescByPublishedGetter](state: State) {

@@ -16,6 +16,8 @@ export const Articles = {
   CreateAction: 'create',
   UpdateAction: 'update',
   DeleteAction: 'delete',
+  StoreAllTagsMutation: 'storeAllTags',
+  StoreAllTagsAction: 'storeAllTags',
   AllSortedDescByPublishedGetter: 'allSortedDescByPublished',
   AllWithTagSortedDescByPublishedGetter: 'allWithTagSortedDescByPublished'
 };
