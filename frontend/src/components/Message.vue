@@ -2,16 +2,35 @@
   <div class="message center-items">
     {{ text }}
     <div class="space"></div>
-    <button @click="$emit('closeMessage')">Close</button>
+    <button @click="close">Close</button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import useStore from '@/composables/store';
+import * as storeTypes from '@/store/storeTypes';
 
 export default defineComponent({
-  props: ['text'],
-  emits: ['closeMessage'],
+  props: {
+    id: {
+      type: String,
+      reqiured: true,
+    },
+    text: {
+      type: String,
+      reqiured: true,
+    },
+  },
+  setup(props) {
+    const store = useStore();
+    function close() {
+      store.commit(storeTypes.MessagePopMutation, { id: props.id });
+    }
+    return {
+      close,
+    };
+  },
 });
 </script>
 

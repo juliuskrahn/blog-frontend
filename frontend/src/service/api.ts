@@ -1,16 +1,26 @@
+/* eslint no-underscore-dangle: 0 */
+
+import {
+  Failed,
+  Unauthorized,
+  NotFound,
+  ServerError,
+} from './apiErrors';
+
 const BASE_URL = 'https://api.juliuskrahn.com/';
 
-const auth = {
+export const auth = {
   _key: null as null | string,
   login(key: string) {
     this._key = key;
   },
   logout() {
     this._key = null;
-  }
-}
+  },
+};
 
 interface Options {
+  // eslint-disable-next-line
   content?: { [key: string]: any };
   sendKey?: boolean;
 }
@@ -18,7 +28,7 @@ interface Options {
 const defaultOptions = {
   content: undefined,
   sendKey: false,
-}
+};
 
 function checkStatus(status: number) {
   switch (status) {
@@ -42,6 +52,7 @@ function checkStatus(status: number) {
 }
 
 function buildRequestBody(options: Options): string | undefined {
+  // eslint-disable-next-line
   const userContent = (options.content ? options.content : {}) as { [key: string]: any };
   const body = { ...userContent };
   if (options.sendKey) {
@@ -51,7 +62,7 @@ function buildRequestBody(options: Options): string | undefined {
     body.key = auth._key;
   }
   let jsonBody: string | undefined = JSON.stringify(body);
-  if (jsonBody === "{}") {
+  if (jsonBody === '{}') {
     jsonBody = undefined;
   }
   return jsonBody;
@@ -63,7 +74,7 @@ async function processResponse(response: Response) {
   return body;
 }
 
-const api = {
+export const api = {
 
   async get(path: string) {
     const response = await fetch(BASE_URL + path);
@@ -93,40 +104,4 @@ const api = {
     });
     return processResponse(response);
   },
-};
-
-class ApiError extends Error { }
-
-class Failed extends ApiError {
-  constructor(code: number, message: string) {
-    super(`${code}: ${message}`)
-  }
-}
-
-class Unauthorized extends Error {
-  constructor(code: number, message: string) {
-    super(`${code}: ${message}`)
-  }
-}
-
-class NotFound extends Error {
-  constructor(code: number, message: string) {
-    super(`${code}: ${message}`)
-  }
-}
-
-class ServerError extends Error {
-  constructor(code: number, message: string) {
-    super(`${code}: ${message}`)
-  }
-}
-
-export {
-  api,
-  auth,
-  ApiError,
-  Failed,
-  Unauthorized,
-  NotFound,
-  ServerError,
 };

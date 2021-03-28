@@ -2,59 +2,47 @@
   <TheHeader/>
   <div class="messages">
     <Message v-for="message in messages"
-    :key="message"
-    :text="message"
-    @closeMessage="messages.splice(messages.indexOf(message), 1)"/>
+    :key="message.id"
+    v-bind="message"
+    />
   </div>
   <div id="content">
-    <router-view
-    @message="message"
-    @login="login"
-    @logout="logout"/>
+    <router-view/>
   </div>
-  <TheFooter/>
+  <!--<TheFooter/>-->
 </template>
 
 <script lang="ts">
 import {
   defineComponent,
-  ref,
-  provide,
+  computed,
 } from 'vue';
+import useStore from '@/composables/store';
 import TheHeader from '@/components/TheHeader.vue';
-import TheFooter from '@/components/TheFooter.vue';
+// import TheFooter from '@/components/TheFooter.vue';
 import Message from '@/components/Message.vue';
+import * as storeTypes from '@/store/storeTypes'; // test
 
 export default defineComponent({
   components: {
     TheHeader,
-    TheFooter,
+    // TheFooter,
     Message,
   },
   setup() {
-    const messages = ref([] as string[]);
-    function message(text: string) {
-      messages.value.push(text);
+    const store = useStore();
+    const messages = computed(() => store.state.messages);
+    function greet(n: string) { // test
+      store.commit(storeTypes.MessagePushMutation, { text: `Hey ${n}` });
     }
-
-    const userIsAdmin = ref(typeof window.localStorage.getItem('key') === 'string');
-    provide('userIsAdmin', userIsAdmin);
-    function login(key: string) {
-      window.localStorage.setItem('key', key);
-      userIsAdmin.value = true;
-    }
-    function logout() {
-      window.localStorage.removeItem('key');
-      userIsAdmin.value = false;
-    }
-
     return {
       messages,
-      message,
-      userIsAdmin,
-      login,
-      logout,
+      greet, // test
     };
+  },
+  mounted() { // test
+    this.greet('1');
+    this.greet('2');
   },
 });
 </script>

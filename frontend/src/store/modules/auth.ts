@@ -1,7 +1,8 @@
 import { Module } from 'vuex';
 import RootState from '../rootState';
 import * as storeTypes from '../storeTypes';
-import { auth, api, Failed } from '../../service/api';
+import { auth, api } from '../../service/api';
+import { Failed } from '../../service/apiErrors';
 
 interface State {
   userIsAdmin: boolean;
@@ -38,6 +39,6 @@ export default {
     [storeTypes.Auth.LogoutAction](context) {
       auth.logout();
       context.commit(storeTypes.Auth.LogoutMutation);
-    }
+    },
   },
 } as Module<State, RootState>;
