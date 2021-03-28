@@ -21,7 +21,6 @@ import useStore from '@/composables/store';
 import TheHeader from '@/components/TheHeader.vue';
 // import TheFooter from '@/components/TheFooter.vue';
 import Message from '@/components/Message.vue';
-import * as storeTypes from '@/store/storeTypes'; // test
 
 export default defineComponent({
   components: {
@@ -32,17 +31,9 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const messages = computed(() => store.state.messages);
-    function greet(n: string) { // test
-      store.commit(storeTypes.MessagePushMutation, { text: `Hey ${n}` });
-    }
     return {
       messages,
-      greet, // test
     };
-  },
-  mounted() { // test
-    this.greet('1');
-    this.greet('2');
   },
 });
 </script>
