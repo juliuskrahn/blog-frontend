@@ -26,6 +26,7 @@ export const Articles = {
 
 export const Comments = {
   _prefix: 'comments',
+  SetArticleUrl: 'setArticleUrl',
   AddMutation: 'add',
   RemoveMutation: 'remove',
   AddAction: 'add',

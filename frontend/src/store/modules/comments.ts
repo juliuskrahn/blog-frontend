@@ -1,5 +1,5 @@
 import { Module } from 'vuex';
-import { State as RootState } from "../";
+import { State as RootState, store } from "../";
 import * as storeTypes from "../storeTypes";
 import { api } from '@/service/api';
 
@@ -10,6 +10,15 @@ interface BaseComment {
 
 interface Resp extends BaseComment { }
 
+interface AddRespUncomittedPayload extends Resp {
+  commentId: string;
+}
+
+interface AddRespPayload extends Resp {
+  commentId: string;
+  id: string;
+}
+
 interface Comment extends BaseComment {
   id: string;
   resps: {
@@ -17,9 +26,13 @@ interface Comment extends BaseComment {
   }
 }
 
+interface AddCommentUncomittedPayload extends Comment {
+  id: never;
+}
+
 interface State {
   comments: Array<Comment>;
-  forArticle: string | null;
+  articleUrl: string | null;
 }
 
 export default {
@@ -27,38 +40,56 @@ export default {
   data(): State {
     return {
       comments: [],
-      forArticle: null,
+      articleUrl: null,
     };
   },
   mutations: {
-    [storeTypes.Comments.AddMutation](state, payload) {
-
+    [storeTypes.Comments.SetArticleUrl](state, payload: { articleUrl: string }) {
+      state.articleUrl = payload.articleUrl;
     },
-    [storeTypes.Comments.RemoveMutation](state, payload) {
-
+    [storeTypes.Comments.AddMutation](state, payload: Comment) {
+      state.comments.push(payload);
     },
-    [storeTypes.Comments.AddRespMutation](state, payload) {
-
+    [storeTypes.Comments.RemoveMutation](state, payload: { id: string }) {
+      const index = state.comments.findIndex((comment) => comment.id === payload.id);
+      state.comments.splice(index, 1);
     },
-    [storeTypes.Comments.RemoveRespMutation](state, payload) {
-
+    [storeTypes.Comments.AddRespMutation](state, payload: AddRespPayload) {
+      const { id, ...resp } = payload;
+      const index = state.comments.findIndex((comment) => comment.id === payload.commentId);
+      state.comments[index].resps[id] = resp;
+    },
+    [storeTypes.Comments.RemoveRespMutation](state, payload: { commentId: string, id: string }) {
+      const index = state.comments.findIndex((comment) => comment.id === payload.commentId);
+      delete state.comments[index].resps[payload.id];
     },
   },
   actions: {
-    [storeTypes.Comments.AddAction](context, payload) {
-
+    async [storeTypes.Comments.AddAction](context, payload: AddCommentUncomittedPayload) {
+      const { id } = await api.post(`article/${context.state.articleUrl}/comments`, {
+        content: payload, sendKey: true
+      });
+      context.commit(storeTypes.Comments.AddMutation, id);
     },
-    [storeTypes.Comments.RemoveAction](context, payload) {
-
+    async [storeTypes.Comments.RemoveAction](context, payload: { id: string }) {
+      await api.delete(`article/${context.state.articleUrl}/comments/${payload.id}`, { sendKey: true });
+      context.commit(storeTypes.Comments.RemoveMutation, payload);
     },
-    [storeTypes.Comments.AddRespAction](context, payload) {
-
+    async [storeTypes.Comments.AddRespAction](context, payload: AddRespUncomittedPayload) {
+      const { id } = await api.post(`article/${context.state.articleUrl}/comments/${payload.commentId}/resps`, {
+        content: payload, sendKey: true
+      });
+      context.commit(storeTypes.Comments.AddRespMutation, { id, ...payload });
     },
-    [storeTypes.Comments.RemoveRespAction](context, payload) {
-
+    async [storeTypes.Comments.RemoveRespAction](context, payload: { commentId: string, id: string }) {
+      await api.delete(`article/${context.state.articleUrl}/comments/${payload.commentId}/resps/${payload.id}`, { sendKey: true });
+      context.commit(storeTypes.Comments.RemoveRespMutation, payload);
     },
-    [storeTypes.Comments.LoadAllAction](context, payload) {
-
+    async [storeTypes.Comments.LoadAllAction](context) {
+      const { comments } = await api.get(`article/${context.state.articleUrl}/comments`);
+      for (let comment of comments) {
+        context.commit(storeTypes.Comments.AddMutation, comment);
+      }
     },
   }
 } as Module<State, RootState>;
