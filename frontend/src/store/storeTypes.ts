@@ -1,10 +1,12 @@
-export const LoginAction = 'login';
-export const LogoutAction = 'logout';
-export const LoginMutation = 'login';
-export const LogoutMutation = 'logout';
-
 export const MessagePushMutation = 'messagePush';
 export const MessagePopMutation = 'messagePop';
+
+export const Auth = {
+  LoginAction: 'login',
+  LogoutAction: 'logout',
+  LoginMutation: 'login',
+  LogoutMutation: 'logout',
+};
 
 export const Articles = {
   _prefix: 'articles',
@@ -32,6 +34,5 @@ export const Comments = {
   RemoveRespMutation: 'removeResp',
   AddRespAction: 'addResp',
   RemoveRespAction: 'removeResp',
-  LoadAll: 'loadAll',
-  AllSortedDescByCommentedGetter: 'allSortedDescByCommented',
+  LoadAllAction: 'loadAll',
 };

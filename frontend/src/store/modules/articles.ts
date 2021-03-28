@@ -33,7 +33,7 @@ interface State {
 
 export default {
   namespaced: true,
-  state() {
+  state(): State {
     return {
       articles: {},
       tags: [],
