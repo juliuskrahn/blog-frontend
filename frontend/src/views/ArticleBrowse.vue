@@ -5,10 +5,9 @@
       <Tag v-for="tag in tags"
       :key="tag"
       :name="tag"
-      :highlight="$route.params.tag && tag!==$route.params.tag"
-      :isPlaceholder="!loadedAllTags"/>
-      <!-- 'Tag' -> show all articles -->
-      <Tag v-if="$route.params.tag"
+      :highlight="tag === filterTag"
+      :isPlaceholder="!loadedTags"/>
+      <Tag v-if="filterTag"
       :name="'&larr; all'"
       class="all-articles-tag"/>
     </div>
@@ -16,13 +15,17 @@
       <ArticleItem v-for="article in articles"
       :key="article.url"
       v-bind="article"
-      :isPlaceholder="!loadedAllArticles"/>
+      :isPlaceholder="!loadedArticles"/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import {
+  computed,
+  defineComponent,
+} from 'vue';
+import { useRoute } from 'vue-router';
 // eslint-disable-next-line
 import useStore from '@/composables/store'; // import cycle
 import * as storeTypes from '@/store/storeTypes';
@@ -38,42 +41,56 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const route = useRoute();
 
-    store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadAllAction}`);
+    const filterTag = computed(() => (route.params.tag ? route.params.tag as string : null));
 
-    const loadedAllArticles = computed(() => store.state.articles.flags.loadedAllArticles);
-
-    const articles = computed(() => {
-      // placeholder if not loaded yet
-      if (!loadedAllArticles.value) {
-        return Array(2).fill({
-          urlTitle: '',
-          title: 'Lorem ipsum',
-          description: 'Lorem ipsum',
-          tag: 'Lorem',
-          published: '2021-01-01',
-        });
-      }
-      return store.getters[`${storeTypes.Articles.Name}/${storeTypes.Articles.AllSortedDescByPublishedGetter}`];
+    const loadedArticles = computed(() => {
+      const loadedAll = store.state.articles.flags.loadedAllArticles;
+      const loadedFiltered = filterTag.value
+      && store.state.articles.flags.loadedAllArticlesWithTags.includes(filterTag.value);
+      return loadedAll || loadedFiltered;
     });
 
-    store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadAllTagsAction}`);
+    const articles = computed(() => {
+      let get: Function;
+      if (filterTag.value) {
+        store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadAllWithTagAction}`, { tag: filterTag.value });
+        get = () => store.getters[`${storeTypes.Articles.Name}/${storeTypes.Articles.AllWithTagSortedDescByPublishedGetter}`](filterTag.value);
+      } else {
+        store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadAllAction}`);
+        get = () => store.getters[`${storeTypes.Articles.Name}/${storeTypes.Articles.AllSortedDescByPublishedGetter}`];
+      }
+      if (loadedArticles.value) {
+        return get();
+      }
+      // placeholder
+      return Array(2).fill({
+        urlTitle: '',
+        title: 'Lorem ipsum',
+        description: 'Lorem ipsum',
+        tag: 'Lorem',
+        published: '2021-01-01',
+      });
+    });
 
-    const loadedAllTags = computed(() => store.state.articles.flags.loadedAllTags);
+    const loadedTags = computed(() => store.state.articles.flags.loadedAllTags);
 
     const tags = computed(() => {
-      // placeholder if not loaded yet
-      if (!loadedAllTags.value) {
-        return Array(1).fill('Lorem');
+      store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadAllTagsAction}`);
+      if (loadedTags.value) {
+        return store.state.articles.tags;
       }
-      return store.state.articles.tags;
+      // placeholder
+      return Array(1).fill('Lorem');
     });
 
     return {
-      loadedAllArticles,
+      loadedArticles,
       articles,
-      loadedAllTags,
+      loadedTags,
       tags,
+      filterTag,
     };
   },
 });

@@ -90,7 +90,8 @@ export const articlesModule = {
 
     async [storeTypes.Articles.LoadAllWithTagAction](context, payload: { tag: string }) {
       // loads all articles with a specific tag (content excluded)
-      if (context.state.flags.loadedAllArticlesWithTags.includes(payload.tag)) {
+      if (context.state.flags.loadedAllArticles
+        || context.state.flags.loadedAllArticlesWithTags.includes(payload.tag)) {
         return;
       }
       const { articles }: { articles: Array<ArticleEntity> } = await api.get(`tag/${payload.tag}`);
@@ -99,7 +100,7 @@ export const articlesModule = {
       }
       articles.forEach((article) => context.commit(storeTypes.Articles.PutMutation, article));
       context.commit(storeTypes.Articles.SetFlagsMutation, {
-        loadedAllArticlesWithTags: context.state.flags.loadedAllArticlesWithTags.push(payload.tag),
+        loadedAllArticlesWithTags: [...context.state.flags.loadedAllArticlesWithTags, payload.tag],
       });
     },
 
