@@ -5,7 +5,7 @@
       <Tag v-for="tag in tags"
       :key="tag"
       :name="tag"
-      :highlight="tag === filterTag"
+      :highlight="filterTag && tag !== filterTag"
       :isPlaceholder="!loadedTags"/>
       <Tag v-if="filterTag"
       :name="'&larr; all'"
