@@ -6,17 +6,14 @@
       <p class="commented">{{ commented(id) }}</p>
     </header>
     <p class="content">{{ content }}</p>
-    <button @click="$emit('deleteComment')" v-if="userIsAdmin.value">Delete</button>
-    <CommentInput
-    class="create-reply"
-    v-if="showReplyInput"
-    v-model="replyInputVal"
-    @submitInput="createReply"
-    label="Reply"/>
+    <button @click="deleteComment" v-if="userIsAdmin">Delete</button>
+    <CommentRespInput
+    class="resp-input-container"
+    v-if="showInput"/>
     <button
-    @click="showReplyInput = !showReplyInput"
-    class="reply-ctrl normal-link">
-      {{ showReplyInput ? 'Cancel' : 'Reply' }}
+    @click="showInput = !showInput"
+    class="toggle-input normal-link">
+      {{ showInput ? 'Cancel' : 'Reply' }}
     </button>
     <div class="resps">
       <div class="resp" v-for="(resp, respId) in resps" :key="respId">
@@ -27,43 +24,51 @@
         </header>
         <p class="content">{{ resp.content }}</p>
         <button
-        @click="$emit('deleteResp', {commentId: id, respId})"
-        v-if="userIsAdmin">
-          Delete
-        </button>
+        @click="deleteResp(respId)" v-if="userIsAdmin">Delete</button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import CommentInput from '@/components/CommentInput.vue';
+import {
+  computed,
+  defineComponent,
+  Ref,
+  ref,
+} from 'vue';
+import CommentRespInput from '@/components/CommentRespInput.vue';
+import useStore from '@/composables/store';
+import * as storeTypes from '@/store/storeTypes';
 
 export default defineComponent({
-  components: { CommentInput },
-  inject: ['userIsAdmin'],
+  components: { CommentRespInput },
   props: ['id', 'content', 'author', 'resps'],
-  emits: ['createResp', 'deleteComment', 'deleteResp'],
-  data() {
-    return {
-      replyInputVal: '',
-      showReplyInput: false,
-    };
-  },
-  methods: {
-    createReply(author: string) {
-      this.$emit('createResp', {
-        author,
-        content: this.replyInputVal,
-        commentId: this.id,
+  setup(props) {
+    const store = useStore();
+
+    const userIsAdmin = computed(() => store.state.auth.userIsAdmin);
+
+    function deleteComment() {
+      store.dispatch(`${storeTypes.Comments.Name}/${storeTypes.Comments.RemoveAction}`, {
+        id: props.id,
       });
-      this.showReplyInput = false;
-    },
-    commented(id: string) {
-      const datetime = new Date(id.substring(0, id.search('#')));
-      return datetime.toDateString();
-    },
+    }
+
+    function deleteResp(respId: string) {
+      store.dispatch(`${storeTypes.Comments.Name}/${storeTypes.Comments.RemoveAction}`, {
+        commentId: props.id, id: respId,
+      });
+    }
+
+    const showInput: Ref<boolean> = ref(false);
+
+    return {
+      userIsAdmin,
+      deleteComment,
+      deleteResp,
+      showInput,
+    };
   },
 });
 </script>
@@ -98,7 +103,7 @@ header {
   font-size: 14px;
 }
 
-.reply-ctrl {
+.toggle-input {
   color: black;
   float: right;
 }
@@ -107,7 +112,7 @@ header {
   color: var(--blue);
 }
 
-.create-reply {
+.resp-input-container {
   padding-left: 16px;
 }
 </style>

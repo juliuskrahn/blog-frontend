@@ -1,6 +1,6 @@
 <template>
   <CommentBaseInput
-  :label="'What are your thoughts?'"
+  :label="'Reply'"
   @submitInput="submitInput"
   />
 </template>
@@ -13,10 +13,18 @@ import CommentBaseInput from '@/components/CommentBaseInput.vue';
 
 export default defineComponent({
   components: { CommentBaseInput },
-  setup() {
+  props: {
+    commentId: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
     const store = useStore();
     function submitInput(event: { author: string; content: string }) {
-      store.dispatch(`${storeTypes.Comments.Name}/${storeTypes.Comments.AddAction}`, event);
+      store.dispatch(`${storeTypes.Comments.Name}/${storeTypes.Comments.AddRespAction}`, {
+        ...event, commentId: props.commentId,
+      });
     }
     return {
       submitInput,

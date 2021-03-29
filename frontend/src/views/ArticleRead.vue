@@ -7,7 +7,7 @@
     Open in Admin console
   </router-link>
   <Comments
-  v-if="false"
+  v-if="loaded"
   :articleUrlTitle="article.urlTitle"/>
 </template>
 

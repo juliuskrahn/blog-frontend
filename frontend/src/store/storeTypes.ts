@@ -39,4 +39,5 @@ export const Comments = {
   AddRespAction: 'addResp',
   RemoveRespAction: 'removeResp',
   LoadAllAction: 'loadAll',
+  SetAuthorName: 'setAuthorName',
 };

@@ -31,6 +31,7 @@ interface AddCommentUncomittedPayload extends Comment {
 export interface CommentsModuleState {
   comments: Array<Comment>;
   commentsForArticlWithUrlTitle: string | null;
+  authorName: string;
 }
 
 // eslint-disable-next-line
@@ -46,6 +47,7 @@ export const commentsModule = {
     return {
       comments: [],
       commentsForArticlWithUrlTitle: null,
+      authorName: localStorage.getItem('author') || '',
     };
   },
   mutations: {
@@ -75,6 +77,11 @@ export const commentsModule = {
     [storeTypes.Comments.RemoveRespMutation](state, payload: { commentId: string; id: string }) {
       const index = state.comments.findIndex((comment) => comment.id === payload.commentId);
       delete state.comments[index].resps[payload.id];
+    },
+
+    [storeTypes.Comments.SetAuthorName](state, payload: { authorName: string }) {
+      state.authorName = payload.authorName;
+      localStorage.setItem('author', payload.authorName);
     },
 
   },
