@@ -115,16 +115,19 @@ export const articlesModule = {
     async [storeTypes.Articles.CreateAction](context, payload: UncomittedArticleEntity) {
       await api.post('article', { sendKey: true, content: payload });
       context.commit(storeTypes.Articles.PutMutation, payload);
+      context.commit(storeTypes.MessagePushMutation, { text: 'Article created' }, { root: true });
     },
 
     async [storeTypes.Articles.UpdateAction](context, payload: ArticleEntity) {
       await api.patch(`article/${payload.urlTitle}`, { sendKey: true, content: payload });
       context.commit(storeTypes.Articles.PutMutation, payload);
+      context.commit(storeTypes.MessagePushMutation, { text: 'Article updated' }, { root: true });
     },
 
     async [storeTypes.Articles.DeleteAction](context, payload: { urlTitle: string }) {
       await api.delete(`article/${payload.urlTitle}`, { sendKey: true });
       context.commit(storeTypes.Articles.RemoveMutation, payload);
+      context.commit(storeTypes.MessagePushMutation, { text: 'Article deleted' }, { root: true });
     },
 
     async [storeTypes.Articles.LoadAllTagsAction](context) {
