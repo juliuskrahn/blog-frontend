@@ -45,37 +45,49 @@ export const articlesModule = {
     };
   },
   mutations: {
+
     [storeTypes.Articles.PutMutation](state, payload: ArticleEntity) {
-      const { urlTitle, ...articlce } = payload;
-      state.articles[urlTitle] = articlce;
+      const { urlTitle, ...article } = payload;
+      state.articles[urlTitle] = article;
     },
+
     [storeTypes.Articles.RemoveMutation](state, payload: { urlTitle: string }) {
       delete state.articles[payload.urlTitle];
     },
-    [storeTypes.Articles.StoreAllTagsMutation](state, payload: { tags: string[] }) {
+
+    [storeTypes.Articles.PutAllTagsMutation](state, payload: { tags: string[] }) {
       state.tags = payload.tags;
     },
+
+    [storeTypes.Articles.SetFlagsMutation](state, payload) {
+      state.flags = { ...state.flags, ...payload };
+    },
+
   },
   actions: {
+
     async [storeTypes.Articles.LoadFullAction](context, payload: { urlTitle: string }) {
       // loads a single article (with content)
       if (context.state.articles[payload.urlTitle]?.content) {
         return;
       }
-      const article = await api.get(`articlce/${payload.urlTitle}`);
+      const article = await api.get(`article/${payload.urlTitle}`);
       context.commit(storeTypes.Articles.PutMutation, article);
     },
+
     async [storeTypes.Articles.LoadAllAction](context) {
       // loads all articles (content excluded)
       if (context.state.flags.loadedAllArticles) {
         return;
       }
-      const { articles }: { articles: Array<ArticleEntity> } = await api.get('articlce');
+      const { articles }: { articles: Array<ArticleEntity> } = await api.get('article');
       if (!Array.isArray(articles)) {
         throw new TypeError();
       }
       articles.forEach((article) => context.commit(storeTypes.Articles.PutMutation, article));
+      context.commit(storeTypes.Articles.SetFlagsMutation, { loadedAllArticles: true });
     },
+
     async [storeTypes.Articles.LoadAllWithTagAction](context, payload: { tag: string }) {
       // loads all articles with a specific tag (content excluded)
       if (context.state.flags.loadedAllArticlesWithTags.includes(payload.tag)) {
@@ -86,25 +98,35 @@ export const articlesModule = {
         throw new TypeError();
       }
       articles.forEach((article) => context.commit(storeTypes.Articles.PutMutation, article));
+      context.commit(storeTypes.Articles.SetFlagsMutation, {
+        loadedAllArticlesWithTags: context.state.flags.loadedAllArticlesWithTags.push(payload.tag),
+      });
     },
+
     async [storeTypes.Articles.CreateAction](context, payload: UncomittedArticleEntity) {
       await api.post('article', { sendKey: true, content: payload });
       context.commit(storeTypes.Articles.PutMutation, payload);
     },
+
     async [storeTypes.Articles.UpdateAction](context, payload: ArticleEntity) {
       await api.patch(`article/${payload.urlTitle}`, { sendKey: true, content: payload });
       context.commit(storeTypes.Articles.PutMutation, payload);
     },
+
     async [storeTypes.Articles.DeleteAction](context, payload: { urlTitle: string }) {
       await api.delete(`article/${payload.urlTitle}`, { sendKey: true });
       context.commit(storeTypes.Articles.RemoveMutation, payload);
     },
-    async [storeTypes.Articles.StoreAllTagsAction](context) {
-      const tags = await api.get('tags');
-      context.commit(storeTypes.Articles.StoreAllTagsAction, tags);
+
+    async [storeTypes.Articles.LoadAllTagsAction](context) {
+      const { tags } = await api.get('tag');
+      context.commit(storeTypes.Articles.PutAllTagsMutation, { tags });
+      context.commit(storeTypes.Articles.SetFlagsMutation, { loadedAllTags: true });
     },
+
   },
   getters: {
+
     [storeTypes.Articles.AllSortedDescByPublishedGetter](state: ArticlesModuleState) {
       const articles: Array<ArticleEntity> = [];
       Object.entries(state.articles).forEach(
@@ -112,6 +134,7 @@ export const articlesModule = {
       );
       return articles.sort((a, b) => b.published.localeCompare(a.published));
     },
+
     [storeTypes.Articles.AllWithTagSortedDescByPublishedGetter](state: ArticlesModuleState) {
       function wrapped(tag: string) {
         const articles: Array<ArticleEntity> = [];
@@ -122,5 +145,6 @@ export const articlesModule = {
       }
       return wrapped;
     },
+
   },
 } as Module<ArticlesModuleState, RootState>;

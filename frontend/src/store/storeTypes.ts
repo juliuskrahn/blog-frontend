@@ -20,10 +20,11 @@ export const Articles = {
   CreateAction: 'create',
   UpdateAction: 'update',
   DeleteAction: 'delete',
-  StoreAllTagsMutation: 'storeAllTags',
-  StoreAllTagsAction: 'storeAllTags',
+  PutAllTagsMutation: 'putAllTags',
+  LoadAllTagsAction: 'loadAllTags',
   AllSortedDescByPublishedGetter: 'allSortedDescByPublished',
   AllWithTagSortedDescByPublishedGetter: 'allWithTagSortedDescByPublished',
+  SetFlagsMutation: 'setFlags',
 };
 
 export const Comments = {

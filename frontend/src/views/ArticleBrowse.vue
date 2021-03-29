@@ -3,9 +3,11 @@
   <div class="articles">
     <div class="tag-list">
       <Tag v-for="tag in tags"
-      :key="tag" :name="tag"
+      :key="tag"
+      :name="tag"
       :highlight="$route.params.tag && tag!==$route.params.tag"
-      :isPlaceholder="loadingTags"/>
+      :isPlaceholder="!loadedAllTags"/>
+      <!-- 'Tag' -> show all articles -->
       <Tag v-if="$route.params.tag"
       :name="'&larr; all'"
       class="all-articles-tag"/>
@@ -14,13 +16,16 @@
       <ArticleItem v-for="article in articles"
       :key="article.url"
       v-bind="article"
-      :isPlaceholder="loadingArticles"/>
+      :isPlaceholder="!loadedAllArticles"/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+// eslint-disable-next-line
+import useStore from '@/composables/store'; // import cycle
+import * as storeTypes from '@/store/storeTypes';
 import ArticleItem from '@/components/ArticleItem.vue';
 import Tag from '@/components/Tag.vue';
 import TheAbout from '@/components/TheAbout.vue';
@@ -31,54 +36,45 @@ export default defineComponent({
     Tag,
     TheAbout,
   },
-  data() {
+  setup() {
+    const store = useStore();
+
+    store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadAllAction}`);
+
+    const loadedAllArticles = computed(() => store.state.articles.flags.loadedAllArticles);
+
+    const articles = computed(() => {
+      // placeholder if not loaded yet
+      if (!loadedAllArticles.value) {
+        return Array(2).fill({
+          urlTitle: '',
+          title: 'Lorem ipsum',
+          description: 'Lorem ipsum',
+          tag: 'Lorem',
+          published: '2021-01-01',
+        });
+      }
+      return store.getters[`${storeTypes.Articles.Name}/${storeTypes.Articles.AllSortedDescByPublishedGetter}`];
+    });
+
+    store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadAllTagsAction}`);
+
+    const loadedAllTags = computed(() => store.state.articles.flags.loadedAllTags);
+
+    const tags = computed(() => {
+      // placeholder if not loaded yet
+      if (!loadedAllTags.value) {
+        return Array(1).fill('Lorem');
+      }
+      return store.state.articles.tags;
+    });
+
     return {
-      loadingTags: true,
-      loadingArticles: true,
-      // dummy data for loading placeholder...
-      articles: Array(2).fill({
-        urlTitle: '',
-        title: 'Lorem ipsum',
-        description: 'Lorem ipsum',
-        tag: 'Lorem',
-        published: '2021-01-01',
-      }),
-      tags: Array(1).fill('Lorem'),
+      loadedAllArticles,
+      articles,
+      loadedAllTags,
+      tags,
     };
-  },
-  methods: {
-    async getArticles() {
-      let url: string;
-      if (this.$route.params.tag) {
-        url = `https://api.juliuskrahn.com/tag/${this.$route.params.tag}`;
-      } else {
-        url = 'https://api.juliuskrahn.com/article';
-      }
-      const resp = await fetch(url);
-      const body = await resp.json();
-      this.articles = body?.articles;
-      this.loadingArticles = false;
-    },
-    async getTags() {
-      const resp = await fetch('https://api.juliuskrahn.com/tag');
-      const body = await resp.json();
-      this.tags = body?.tags;
-      this.loadingTags = false;
-    },
-  },
-  watch: {
-    $route(to: { name: string }) {
-      if (to.name === 'Articles' || to.name === 'ArticlesWithTag') {
-        this.loadingArticles = true;
-        this.loadingTags = true;
-        this.getArticles();
-        this.getTags();
-      }
-    },
-  },
-  created() {
-    this.getArticles();
-    this.getTags();
   },
 });
 </script>

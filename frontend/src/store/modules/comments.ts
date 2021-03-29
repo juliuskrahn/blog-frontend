@@ -88,6 +88,9 @@ export const commentsModule = {
       context.commit(storeTypes.Comments.RemoveRespMutation, payload);
     },
     async [storeTypes.Comments.LoadAllAction](context) {
+      if (context.state.comments?.length) {
+        return;
+      }
       const { comments }: { comments: CommentsModuleState['comments'] } = await api.get(`article/${context.state.commentsForArticlWitheUrl}/comments`);
       comments.forEach((comment) => context.commit(storeTypes.Comments.AddMutation, comment));
     },

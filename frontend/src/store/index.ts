@@ -1,5 +1,5 @@
 import { InjectionKey } from 'vue';
-import { createStore, Store } from 'vuex';
+import { createStore, Store as VuexStore } from 'vuex';
 import RootState from './rootState';
 import * as storeTypes from './storeTypes';
 import { uuid4 } from './utils';
@@ -8,13 +8,15 @@ import { authModule, AuthModuleState } from './modules/auth';
 import { articlesModule, ArticlesModuleState } from './modules/articles';
 import { commentsModule, CommentsModuleState } from './modules/comments';
 
-export const injectionKey: InjectionKey<Store<StoreState>> = Symbol('StoreInjectionKey');
-
-interface StoreState extends RootState {
+export interface StoreState extends RootState {
   auth: AuthModuleState;
   articles: ArticlesModuleState;
   comments: CommentsModuleState;
 }
+
+export type Store = VuexStore<StoreState>;
+
+export const injectionKey: InjectionKey<Store> = Symbol('StoreInjectionKey');
 
 type Message = RootState['messages'][0];
 interface MessagePayload extends Message {
