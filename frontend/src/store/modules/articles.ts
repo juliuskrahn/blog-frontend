@@ -71,7 +71,7 @@ export const articlesModule = {
       if (context.state.articles[payload.urlTitle]?.content) {
         return;
       }
-      const article = await api.get(`article/${payload.urlTitle}`);
+      const { article } = await api.get(`article/${payload.urlTitle}`);
       context.commit(storeTypes.Articles.PutMutation, article);
     },
 
@@ -84,7 +84,11 @@ export const articlesModule = {
       if (!Array.isArray(articles)) {
         throw new TypeError();
       }
-      articles.forEach((article) => context.commit(storeTypes.Articles.PutMutation, article));
+      articles.forEach((article) => {
+        if (!context.state.articles[article.urlTitle]?.content) {
+          context.commit(storeTypes.Articles.PutMutation, article);
+        }
+      });
       context.commit(storeTypes.Articles.SetFlagsMutation, { loadedAllArticles: true });
     },
 
@@ -98,7 +102,11 @@ export const articlesModule = {
       if (!Array.isArray(articles)) {
         throw new TypeError();
       }
-      articles.forEach((article) => context.commit(storeTypes.Articles.PutMutation, article));
+      articles.forEach((article) => {
+        if (!context.state.articles[article.urlTitle]?.content) {
+          context.commit(storeTypes.Articles.PutMutation, article);
+        }
+      });
       context.commit(storeTypes.Articles.SetFlagsMutation, {
         loadedAllArticlesWithTags: [...context.state.flags.loadedAllArticlesWithTags, payload.tag],
       });
