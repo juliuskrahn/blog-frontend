@@ -25,9 +25,8 @@ import {
   computed,
   defineComponent,
 } from 'vue';
+import useStore from '@/composables/store';
 import { useRoute } from 'vue-router';
-// eslint-disable-next-line
-import useStore from '@/composables/store'; // import cycle
 import * as storeTypes from '@/store/storeTypes';
 import ArticleItem from '@/components/ArticleItem.vue';
 import Tag from '@/components/Tag.vue';

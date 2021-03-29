@@ -1,17 +1,16 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import ArticleBrowse from '../views/ArticleBrowse.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'ArticleBrowse',
-    component: ArticleBrowse,
+    component: () => import('../views/ArticleBrowse.vue'),
   },
   { path: '/articles', redirect: '/' },
   {
     path: '/tag/:tag',
     name: 'ArticleBrowseTag',
-    component: ArticleBrowse,
+    component: () => import('../views/ArticleBrowse.vue'),
   },
   {
     path: '/article/:article',
@@ -21,10 +20,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/projects',
     name: 'Projects',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Projects.vue'),
+    component: () => import('../views/Projects.vue'),
   },
   {
     path: '/admin-login',

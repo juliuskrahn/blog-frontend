@@ -128,6 +128,9 @@ export const articlesModule = {
     },
 
     async [storeTypes.Articles.LoadAllTagsAction](context) {
+      if (context.state.flags.loadedAllTags) {
+        return;
+      }
       const { tags } = await api.get('tag');
       context.commit(storeTypes.Articles.PutAllTagsMutation, { tags });
       context.commit(storeTypes.Articles.SetFlagsMutation, { loadedAllTags: true });
