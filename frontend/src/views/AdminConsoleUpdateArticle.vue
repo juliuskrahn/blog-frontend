@@ -52,9 +52,15 @@ export default defineComponent({
       content: null,
     });
 
-    watch(originalArticle, (originalArticleValue) => {
+    function applyArticleData(originalArticleValue: typeof originalArticle.value) {
       Object.assign(article, originalArticleValue);
-    });
+    }
+
+    if (originalArticle.value) {
+      applyArticleData(originalArticle.value);
+    }
+
+    watch(originalArticle, applyArticleData);
 
     function submitUpdate() {
       if (article.content) {
