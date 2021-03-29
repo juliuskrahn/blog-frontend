@@ -1,7 +1,7 @@
 <template>
   <TheArticle v-bind="article" :isPlaceholder="!loaded"/>
   <router-link
-  :to="{ name: 'AdminConsole', params: { article: article.urlTitle } }"
+  :to="'/admin-console/update-article/'+article.urlTitle"
   v-if="userIsAdmin"
   class="button">
     Open in Admin console

@@ -32,9 +32,26 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AdminLogin.vue'),
   },
   {
-    path: '/admin-console/:article?',
+    path: '/admin-console',
     name: 'AdminConsole',
     component: () => import('../views/AdminConsole.vue'),
+    children: [
+      {
+        path: '',
+        name: 'AdminConsoleHome',
+        component: () => import('../views/AdminConsoleHome.vue'),
+      },
+      {
+        path: 'new-article',
+        name: 'AdminConsoleNewArticle',
+        component: () => import('../views/AdminConsoleNewArticle.vue'),
+      },
+      {
+        path: 'update-article/:article',
+        name: 'AdminConsoleUpdateArticle',
+        component: () => import('../views/AdminConsoleUpdateArticle.vue'),
+      },
+    ],
   },
   {
     path: '/contact',

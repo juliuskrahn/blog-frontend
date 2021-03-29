@@ -49,7 +49,10 @@ export const authModule = {
     },
     [storeTypes.Auth.LogoutAction](context) {
       auth.logout();
+      localStorage.removeItem('key');
       context.commit(storeTypes.Auth.LogoutMutation);
+      context.commit(storeTypes.MessagePushMutation, { text: 'Logged out' }, { root: true });
+      router.push('/');
     },
   },
 } as Module<AuthModuleState, RootState>;

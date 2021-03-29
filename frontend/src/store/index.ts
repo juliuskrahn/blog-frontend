@@ -2,7 +2,7 @@ import { InjectionKey } from 'vue';
 import { createStore, Store as VuexStore } from 'vuex';
 import RootState from './rootState';
 import * as storeTypes from './storeTypes';
-import { uuid4 } from './utils';
+import { uuid4 } from '../utils';
 
 import { authModule, AuthModuleState } from './modules/auth';
 import { articlesModule, ArticlesModuleState } from './modules/articles';
