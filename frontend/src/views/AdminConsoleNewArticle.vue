@@ -1,16 +1,16 @@
 <template>
-  <template v-if="article.content">
-    <BaseInput v-model="article.title" label="Title"/>
-    <br/>
-    <BaseInput v-model="article.tag" label="Tag" size="small"/>
-    <div class="space"></div>
-    <BaseInput v-model="article.description" label="Description"/>
-    <TheArticle v-bind="article"/>
-    <button @click="submitNewArticle">Submit</button>
-    <div class="space"></div>
-    <BaseFileInput v-model="content">Load content from file</BaseFileInput>
-    <div class="space"></div>
-  </template>
+  <BaseInput v-model="article.title" label="Title"/>
+  <div class="space"></div>
+  <BaseInput v-model="article.urlTitle" label="URL title" size="small"/>
+  <br/>
+  <BaseInput v-model="article.tag" label="Tag" size="small"/>
+  <div class="space"></div>
+  <BaseInput v-model="article.description" label="Description"/>
+  <TheArticle v-bind="article"/>
+  <button @click="submitNewArticle">Submit</button>
+  <div class="space"></div>
+  <BaseFileInput v-model="content">Load content from file</BaseFileInput>
+  <div class="space"></div>
   <router-link class="button" to="/admin-console">Cancel</router-link>
 </template>
 
