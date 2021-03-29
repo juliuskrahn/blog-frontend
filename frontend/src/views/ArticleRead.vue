@@ -30,7 +30,7 @@ export default defineComponent({
 
     const urlTitle = computed(() => route.params.article as string);
 
-    const loaded = computed(() => !!store.state.articles.articles[urlTitle.value]);
+    const loaded = computed(() => !!store.state.articles.articles[urlTitle.value]?.content);
 
     const article = computed(() => {
       store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.LoadFullAction}`, { urlTitle: urlTitle.value });
