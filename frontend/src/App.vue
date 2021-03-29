@@ -9,27 +9,26 @@
   <div id="content">
     <router-view/>
   </div>
-  <!--<TheFooter/>-->
+  <TheFooter/>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-} from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import useStore from '@/composables/store';
+import * as storeTypes from '@/store/storeTypes';
 import TheHeader from '@/components/TheHeader.vue';
-// import TheFooter from '@/components/TheFooter.vue';
+import TheFooter from '@/components/TheFooter.vue';
 import Message from '@/components/Message.vue';
 
 export default defineComponent({
   components: {
     TheHeader,
-    // TheFooter,
+    TheFooter,
     Message,
   },
   setup() {
     const store = useStore();
+    onMounted(() => store.dispatch(`${storeTypes.Auth.Name}/${storeTypes.Auth.TryToLoginAgainAction}`));
     const messages = computed(() => store.state.messages);
     return {
       messages,

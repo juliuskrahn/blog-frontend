@@ -30,6 +30,23 @@ const defaultOptions = {
   sendKey: false,
 };
 
+function buildRequestBody(options: Options): string | undefined {
+  // eslint-disable-next-line
+  const userContent = (options.content ? options.content : {}) as { [key: string]: any };
+  const body = { ...userContent };
+  if (options.sendKey) {
+    if (typeof auth._key !== 'string') {
+      throw new Unauthorized(401, 'Unauthorized (no admin key provided)');
+    }
+    body.key = auth._key;
+  }
+  let jsonBody: string | undefined = JSON.stringify(body);
+  if (jsonBody === '{}') {
+    jsonBody = undefined;
+  }
+  return jsonBody;
+}
+
 function checkStatus(status: number) {
   switch (status) {
     case 400:
@@ -51,26 +68,17 @@ function checkStatus(status: number) {
   }
 }
 
-function buildRequestBody(options: Options): string | undefined {
-  // eslint-disable-next-line
-  const userContent = (options.content ? options.content : {}) as { [key: string]: any };
-  const body = { ...userContent };
-  if (options.sendKey) {
-    if (typeof auth._key !== 'string') {
-      throw new Unauthorized(401, 'Unauthorized (no admin key provided)');
-    }
-    body.key = auth._key;
-  }
-  let jsonBody: string | undefined = JSON.stringify(body);
-  if (jsonBody === '{}') {
-    jsonBody = undefined;
-  }
-  return jsonBody;
-}
-
 async function processResponse(response: Response) {
   checkStatus(response.status);
-  const body = await response.json();
+  // eslint-disable-next-line
+  let body: any;
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.indexOf('application/json') !== -1) {
+    try {
+      body = await response.json();
+      // eslint-disable-next-line
+    } catch (e) { }
+  }
   return body;
 }
 

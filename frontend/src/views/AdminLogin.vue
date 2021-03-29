@@ -2,7 +2,7 @@
   <form @submit.prevent="submit">
     <BaseInput type="password" v-model="key" label="Admin key"/>
     <br/>
-    <button type="submit">Login</button>
+    <button type="submit" @click="login">Login</button>
   </form>
 </template>
 
@@ -18,7 +18,7 @@ export default defineComponent({
     const store = useStore();
     const key = ref('');
     function login() {
-      store.dispatch(Auth.LoginAction, { key: key.value });
+      store.dispatch(`${Auth.Name}/${Auth.LoginAction}`, { key: key.value });
     }
     return {
       key,

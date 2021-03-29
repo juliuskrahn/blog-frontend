@@ -2,14 +2,16 @@ export const MessagePushMutation = 'messagePush';
 export const MessagePopMutation = 'messagePop';
 
 export const Auth = {
+  Name: 'auth',
   LoginAction: 'login',
   LogoutAction: 'logout',
   LoginMutation: 'login',
   LogoutMutation: 'logout',
+  TryToLoginAgainAction: 'tryToLoginAgain',
 };
 
 export const Articles = {
-  _prefix: 'articles',
+  Name: 'articles',
   PutMutation: 'put',
   RemoveMutation: 'remove',
   LoadFullAction: 'loadFull',
@@ -25,7 +27,7 @@ export const Articles = {
 };
 
 export const Comments = {
-  _prefix: 'comments',
+  Name: 'comments',
   SetArticleUrl: 'setArticleUrl',
   AddMutation: 'add',
   RemoveMutation: 'remove',

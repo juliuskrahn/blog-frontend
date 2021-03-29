@@ -1,5 +1,5 @@
 import { Module } from 'vuex';
-import { api } from '../../service/api';
+import { api } from '@/service/api';
 import RootState from '../rootState';
 import * as storeTypes from '../storeTypes';
 
@@ -28,22 +28,22 @@ interface AddCommentUncomittedPayload extends Comment {
   id: never;
 }
 
-interface State {
+export interface CommentsModuleState {
   comments: Array<Comment>;
-  articleUrl: string | null;
+  commentsForArticlWitheUrl: string | null;
 }
 
-export default {
+export const commentsModule = {
   namespaced: true,
-  data(): State {
+  data(): CommentsModuleState {
     return {
       comments: [],
-      articleUrl: null,
+      commentsForArticlWitheUrl: null,
     };
   },
   mutations: {
     [storeTypes.Comments.SetArticleUrl](state, payload: { articleUrl: string }) {
-      state.articleUrl = payload.articleUrl;
+      state.commentsForArticlWitheUrl = payload.articleUrl;
     },
     [storeTypes.Comments.AddMutation](state, payload: Comment) {
       state.comments.push(payload);
@@ -64,17 +64,17 @@ export default {
   },
   actions: {
     async [storeTypes.Comments.AddAction](context, payload: AddCommentUncomittedPayload) {
-      const { id } = await api.post(`article/${context.state.articleUrl}/comments`, {
+      const { id } = await api.post(`article/${context.state.commentsForArticlWitheUrl}/comments`, {
         content: payload, sendKey: true,
       });
       context.commit(storeTypes.Comments.AddMutation, id);
     },
     async [storeTypes.Comments.RemoveAction](context, payload: { id: string }) {
-      await api.delete(`article/${context.state.articleUrl}/comments/${payload.id}`, { sendKey: true });
+      await api.delete(`article/${context.state.commentsForArticlWitheUrl}/comments/${payload.id}`, { sendKey: true });
       context.commit(storeTypes.Comments.RemoveMutation, payload);
     },
     async [storeTypes.Comments.AddRespAction](context, payload: AddRespUncomittedPayload) {
-      const { id } = await api.post(`article/${context.state.articleUrl}/comments/${payload.commentId}/resps`, {
+      const { id } = await api.post(`article/${context.state.commentsForArticlWitheUrl}/comments/${payload.commentId}/resps`, {
         content: payload, sendKey: true,
       });
       context.commit(storeTypes.Comments.AddRespMutation, { id, ...payload });
@@ -82,14 +82,14 @@ export default {
     async [storeTypes.Comments.RemoveRespAction](context, payload: {
       commentId: string; id: string;
     }) {
-      await api.delete(`article/${context.state.articleUrl}/comments/${payload.commentId}/resps/${payload.id}`, {
+      await api.delete(`article/${context.state.commentsForArticlWitheUrl}/comments/${payload.commentId}/resps/${payload.id}`, {
         sendKey: true,
       });
       context.commit(storeTypes.Comments.RemoveRespMutation, payload);
     },
     async [storeTypes.Comments.LoadAllAction](context) {
-      const { comments }: { comments: State['comments'] } = await api.get(`article/${context.state.articleUrl}/comments`);
+      const { comments }: { comments: CommentsModuleState['comments'] } = await api.get(`article/${context.state.commentsForArticlWitheUrl}/comments`);
       comments.forEach((comment) => context.commit(storeTypes.Comments.AddMutation, comment));
     },
   },
-} as Module<State, RootState>;
+} as Module<CommentsModuleState, RootState>;

@@ -1,5 +1,5 @@
 import { Module } from 'vuex';
-import { api } from '../../service/api';
+import { api } from '@/service/api';
 import RootState from '../rootState';
 import * as storeTypes from '../storeTypes';
 
@@ -19,7 +19,7 @@ interface UncomittedArticleEntity extends ArticleEntity {
   published: never;
 }
 
-interface State {
+export interface ArticlesModuleState {
   articles: {
     [key: string]: Article;
   };
@@ -31,9 +31,9 @@ interface State {
   };
 }
 
-export default {
+export const articlesModule = {
   namespaced: true,
-  state(): State {
+  state(): ArticlesModuleState {
     return {
       articles: {},
       tags: [],
@@ -105,14 +105,14 @@ export default {
     },
   },
   getters: {
-    [storeTypes.Articles.AllSortedDescByPublishedGetter](state: State) {
+    [storeTypes.Articles.AllSortedDescByPublishedGetter](state: ArticlesModuleState) {
       const articles: Array<ArticleEntity> = [];
       Object.entries(state.articles).forEach(
         ([urlTitle, article]) => articles.push({ urlTitle, ...article }),
       );
       return articles.sort((a, b) => b.published.localeCompare(a.published));
     },
-    [storeTypes.Articles.AllWithTagSortedDescByPublishedGetter](state: State) {
+    [storeTypes.Articles.AllWithTagSortedDescByPublishedGetter](state: ArticlesModuleState) {
       function wrapped(tag: string) {
         const articles: Array<ArticleEntity> = [];
         Object.entries(state.articles).forEach(([urlTitle, article]) => {
@@ -123,4 +123,4 @@ export default {
       return wrapped;
     },
   },
-} as Module<State, RootState>;
+} as Module<ArticlesModuleState, RootState>;

@@ -1,15 +1,17 @@
 import { Module } from 'vuex';
+import router from '@/router';
+import { auth, api } from '@/service/api';
+import { Failed } from '@/service/apiErrors';
 import RootState from '../rootState';
 import * as storeTypes from '../storeTypes';
-import { auth, api } from '../../service/api';
-import { Failed } from '../../service/apiErrors';
 
-interface State {
+export interface AuthModuleState {
   userIsAdmin: boolean;
 }
 
-export default {
-  state(): State {
+export const authModule = {
+  namespaced: true,
+  state(): AuthModuleState {
     return {
       userIsAdmin: false,
     };
@@ -23,17 +25,26 @@ export default {
     },
   },
   actions: {
-    [storeTypes.Auth.LoginAction](context, payload) {
+    [storeTypes.Auth.LoginAction](context, payload: { key: string }) {
       auth.login(payload.key);
       try {
         api.post('admin-login', { sendKey: true });
         context.commit(storeTypes.Auth.LoginMutation);
+        localStorage.setItem('key', payload.key);
         context.commit(storeTypes.MessagePushMutation, { text: 'Logged in' }, { root: true });
+        router.push('/');
       } catch (e) {
         if (e instanceof Failed) {
-          context.commit(storeTypes.MessagePushMutation, { text: 'Login failed' }, { root: true });
+          context.commit(storeTypes.MessagePushMutation, { text: 'Error: couldn\'t login. Wrong key?' }, { root: true });
           auth.logout();
         }
+      }
+    },
+    [storeTypes.Auth.TryToLoginAgainAction](context) {
+      const key: unknown = localStorage.getItem('key');
+      if (typeof key === 'string') {
+        auth.login(key);
+        context.commit(storeTypes.Auth.LoginMutation);
       }
     },
     [storeTypes.Auth.LogoutAction](context) {
@@ -41,4 +52,4 @@ export default {
       context.commit(storeTypes.Auth.LogoutMutation);
     },
   },
-} as Module<State, RootState>;
+} as Module<AuthModuleState, RootState>;

@@ -4,7 +4,7 @@
        © 2021 by Julius Krahn. All rights reserved.
       GitHub repo: <a class="normal-link" href="https://github.com/juliuskrahn/blog-frontend">frontend</a> <a class="normal-link" href="https://github.com/juliuskrahn/blog-backend">backend</a>
     </p>
-    <router-link v-if="userIsAdmin.value"
+    <router-link v-if="userIsAdmin"
     to="/admin-console"
     class="admin-ctrl normal-link">
       Admin console
@@ -18,10 +18,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import useStore from '@/composables/store';
 
 export default defineComponent({
-  inject: ['userIsAdmin'],
+  setup() {
+    const store = useStore();
+    const userIsAdmin = computed(() => store.state.auth.userIsAdmin);
+    return {
+      userIsAdmin,
+    };
+  },
 });
 </script>
 
