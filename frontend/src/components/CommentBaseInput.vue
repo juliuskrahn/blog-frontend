@@ -49,6 +49,9 @@ export default defineComponent({
     const content = ref('');
 
     function submitInput() {
+      if (content.value === 'admin' && !store.state.auth.userIsAdmin) {
+        content.value = 'admin#not-the-real-admin';
+      }
       emit('submitInput', { author: author.value, content: content.value });
       content.value = '';
     }
