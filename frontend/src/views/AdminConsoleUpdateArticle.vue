@@ -26,7 +26,7 @@ import {
 } from 'vue';
 import TheArticle from '@/components/TheArticle.vue';
 import BaseInput from '@/components/BaseInput.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useStore from '@/composables/store';
 import * as storeTypes from '@/store/storeTypes';
 import BaseFileInput from '@/components/BaseFileInput.vue';
@@ -36,6 +36,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
+    const router = useRouter();
 
     const urlTitle = computed(() => route.params.article as string);
 
@@ -75,6 +76,7 @@ export default defineComponent({
       store.dispatch(`${storeTypes.Articles.Name}/${storeTypes.Articles.DeleteAction}`, {
         urlTitle: urlTitle.value,
       });
+      router.push('/admin-console');
     }
 
     const content = toRef(article, 'content');
