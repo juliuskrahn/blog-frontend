@@ -97,13 +97,13 @@ export const commentsModule = {
 
     async [storeTypes.Comments.RemoveAction](context, payload: { id: string }) {
       isSet(context.state.commentsForArticlWithUrlTitle);
-      await api.delete(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${payload.id}`, { sendKey: true });
+      await api.delete(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${encodeURIComponent(payload.id)}`, { sendKey: true });
       context.commit(storeTypes.Comments.RemoveMutation, payload);
     },
 
     async [storeTypes.Comments.AddRespAction](context, payload: AddRespUncomittedPayload) {
       isSet(context.state.commentsForArticlWithUrlTitle);
-      const { id } = await api.post(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${payload.commentId}/resps`, {
+      const { id } = await api.post(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${encodeURIComponent(payload.commentId)}/resps`, {
         content: payload, sendKey: true,
       });
       context.commit(storeTypes.Comments.AddRespMutation, { ...payload, id });
@@ -113,7 +113,7 @@ export const commentsModule = {
       commentId: string; id: string;
     }) {
       isSet(context.state.commentsForArticlWithUrlTitle);
-      await api.delete(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${payload.commentId}/resps/${payload.id}`, {
+      await api.delete(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${encodeURIComponent(payload.commentId)}/resps/${encodeURIComponent(payload.id)}`, {
         sendKey: true,
       });
       context.commit(storeTypes.Comments.RemoveRespMutation, payload);
