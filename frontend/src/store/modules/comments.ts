@@ -30,7 +30,14 @@ interface AddCommentUncomittedPayload extends Comment {
 
 export interface CommentsModuleState {
   comments: Array<Comment>;
-  commentsForArticlWitheUrl: string | null;
+  commentsForArticlWithUrlTitle: string | null;
+}
+
+// eslint-disable-next-line
+function isSet(val: any) {
+  if (val === null) {
+    throw new TypeError('Not set!');
+  }
 }
 
 export const commentsModule = {
@@ -38,61 +45,81 @@ export const commentsModule = {
   data(): CommentsModuleState {
     return {
       comments: [],
-      commentsForArticlWitheUrl: null,
+      commentsForArticlWithUrlTitle: null,
     };
   },
   mutations: {
-    [storeTypes.Comments.SetArticleUrl](state, payload: { articleUrl: string }) {
-      state.commentsForArticlWitheUrl = payload.articleUrl;
+
+    [storeTypes.Comments.SetArticleUrlTitle](state, payload: { articleUrlTitle: string }) {
+      if (payload.articleUrlTitle !== state.commentsForArticlWithUrlTitle) {
+        state.comments = [];
+      }
+      state.commentsForArticlWithUrlTitle = payload.articleUrlTitle;
     },
+
     [storeTypes.Comments.AddMutation](state, payload: Comment) {
       state.comments.push(payload);
     },
+
     [storeTypes.Comments.RemoveMutation](state, payload: { id: string }) {
       const index = state.comments.findIndex((comment) => comment.id === payload.id);
       state.comments.splice(index, 1);
     },
+
     [storeTypes.Comments.AddRespMutation](state, payload: AddRespPayload) {
       const { id, ...resp } = payload;
       const index = state.comments.findIndex((comment) => comment.id === payload.commentId);
       state.comments[index].resps[id] = resp;
     },
+
     [storeTypes.Comments.RemoveRespMutation](state, payload: { commentId: string; id: string }) {
       const index = state.comments.findIndex((comment) => comment.id === payload.commentId);
       delete state.comments[index].resps[payload.id];
     },
+
   },
   actions: {
+
     async [storeTypes.Comments.AddAction](context, payload: AddCommentUncomittedPayload) {
-      const { id } = await api.post(`article/${context.state.commentsForArticlWitheUrl}/comments`, {
+      isSet(context.state.commentsForArticlWithUrlTitle);
+      const { id } = await api.post(`article/${context.state.commentsForArticlWithUrlTitle}/comments`, {
         content: payload, sendKey: true,
       });
       context.commit(storeTypes.Comments.AddMutation, id);
     },
+
     async [storeTypes.Comments.RemoveAction](context, payload: { id: string }) {
-      await api.delete(`article/${context.state.commentsForArticlWitheUrl}/comments/${payload.id}`, { sendKey: true });
+      isSet(context.state.commentsForArticlWithUrlTitle);
+      await api.delete(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${payload.id}`, { sendKey: true });
       context.commit(storeTypes.Comments.RemoveMutation, payload);
     },
+
     async [storeTypes.Comments.AddRespAction](context, payload: AddRespUncomittedPayload) {
-      const { id } = await api.post(`article/${context.state.commentsForArticlWitheUrl}/comments/${payload.commentId}/resps`, {
+      isSet(context.state.commentsForArticlWithUrlTitle);
+      const { id } = await api.post(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${payload.commentId}/resps`, {
         content: payload, sendKey: true,
       });
       context.commit(storeTypes.Comments.AddRespMutation, { id, ...payload });
     },
+
     async [storeTypes.Comments.RemoveRespAction](context, payload: {
       commentId: string; id: string;
     }) {
-      await api.delete(`article/${context.state.commentsForArticlWitheUrl}/comments/${payload.commentId}/resps/${payload.id}`, {
+      isSet(context.state.commentsForArticlWithUrlTitle);
+      await api.delete(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${payload.commentId}/resps/${payload.id}`, {
         sendKey: true,
       });
       context.commit(storeTypes.Comments.RemoveRespMutation, payload);
     },
+
     async [storeTypes.Comments.LoadAllAction](context) {
+      isSet(context.state.commentsForArticlWithUrlTitle);
       if (context.state.comments?.length) {
         return;
       }
-      const { comments }: { comments: CommentsModuleState['comments'] } = await api.get(`article/${context.state.commentsForArticlWitheUrl}/comments`);
+      const { comments }: { comments: CommentsModuleState['comments'] } = await api.get(`article/${context.state.commentsForArticlWithUrlTitle}/comments`);
       comments.forEach((comment) => context.commit(storeTypes.Comments.AddMutation, comment));
     },
+
   },
 } as Module<CommentsModuleState, RootState>;

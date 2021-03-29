@@ -29,7 +29,7 @@ export const Articles = {
 
 export const Comments = {
   Name: 'comments',
-  SetArticleUrl: 'setArticleUrl',
+  SetArticleUrlTitle: 'setArticleUrl',
   AddMutation: 'add',
   RemoveMutation: 'remove',
   AddAction: 'add',
