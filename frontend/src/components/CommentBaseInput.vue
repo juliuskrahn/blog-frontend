@@ -18,7 +18,7 @@
       v-show="!!content"
       size="small"/>
     </div>
-    <button class="submit" v-show="!!content">Submit</button>
+    <button class="submit" v-show="!!content" @click="submitInput">Submit</button>
   </div>
 </template>
 

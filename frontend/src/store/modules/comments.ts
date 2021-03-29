@@ -92,7 +92,7 @@ export const commentsModule = {
       const { id } = await api.post(`article/${context.state.commentsForArticlWithUrlTitle}/comments`, {
         content: payload, sendKey: true,
       });
-      context.commit(storeTypes.Comments.AddMutation, id);
+      context.commit(storeTypes.Comments.AddMutation, { ...payload, id });
     },
 
     async [storeTypes.Comments.RemoveAction](context, payload: { id: string }) {
@@ -106,7 +106,7 @@ export const commentsModule = {
       const { id } = await api.post(`article/${context.state.commentsForArticlWithUrlTitle}/comments/${payload.commentId}/resps`, {
         content: payload, sendKey: true,
       });
-      context.commit(storeTypes.Comments.AddRespMutation, { id, ...payload });
+      context.commit(storeTypes.Comments.AddRespMutation, { ...payload, id });
     },
 
     async [storeTypes.Comments.RemoveRespAction](context, payload: {

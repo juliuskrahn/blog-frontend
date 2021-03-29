@@ -8,6 +8,7 @@
     <p class="content">{{ content }}</p>
     <button @click="deleteComment" v-if="userIsAdmin">Delete</button>
     <CommentRespInput
+    :commentId="id"
     class="resp-input-container"
     v-if="showInput"/>
     <button
@@ -63,11 +64,17 @@ export default defineComponent({
 
     const showInput: Ref<boolean> = ref(false);
 
+    function commented(id: string) {
+      const datetime = new Date(id.substring(0, id.search('#')));
+      return datetime.toDateString();
+    }
+
     return {
       userIsAdmin,
       deleteComment,
       deleteResp,
       showInput,
+      commented,
     };
   },
 });
