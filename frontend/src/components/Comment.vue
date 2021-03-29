@@ -57,7 +57,7 @@ export default defineComponent({
     }
 
     function deleteResp(respId: string) {
-      store.dispatch(`${storeTypes.Comments.Name}/${storeTypes.Comments.RemoveAction}`, {
+      store.dispatch(`${storeTypes.Comments.Name}/${storeTypes.Comments.RemoveRespAction}`, {
         commentId: props.id, id: respId,
       });
     }
