@@ -13,8 +13,7 @@ class Stack(cdk.core.Stack):
     def __init__(self, scope: cdk.core.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        cdk.core.Tags.of(self).add("Project", "Blog")
-        cdk.core.Tags.of(self).add("Context", "Frontend")
+        cdk.core.Tags.of(self).add("Project", "JuliusKrahnBlogFrontend")
 
         bucket = s3.Bucket(
             self,
